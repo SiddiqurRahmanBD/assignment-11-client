@@ -5,6 +5,7 @@ import SearchPage from "../Pages/Home/SearchPage/SearchPage";
 import DonationRequests from "../Pages/Home/DonationRequests/DonationRequests";
 import PrivateRoute from "./PrivateRoute";
 import Login from "../Pages/Home/LoginPage/Login";
+import Register from "../Pages/Home/RegisterPage/Register";
 
 
 const router = createBrowserRouter([
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: "/auth/login",
         Component: Login,
+      },
+      {
+        path: "/auth/register",
+        Component: Register,
       },
     ],
   },
