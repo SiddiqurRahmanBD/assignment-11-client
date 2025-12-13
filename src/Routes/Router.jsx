@@ -3,6 +3,8 @@ import MainLayout from "../Layouts/MainLayout";
 import Home from "../Pages/Home/Home";
 import SearchPage from "../Pages/Home/SearchPage/SearchPage";
 import DonationRequests from "../Pages/Home/DonationRequests/DonationRequests";
+import PrivateRoute from "./PrivateRoute";
+import Login from "../Pages/Home/LoginPage/Login";
 
 
 const router = createBrowserRouter([
@@ -22,6 +24,12 @@ const router = createBrowserRouter([
         path: "/donation-requests",
         Component: DonationRequests,
       },
+      {
+        path:"login",
+        element:<PrivateRoute>
+          <Login></Login>
+        </PrivateRoute>
+      }
     ],
   },
 ]);
