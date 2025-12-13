@@ -25,11 +25,9 @@ const router = createBrowserRouter([
         Component: DonationRequests,
       },
       {
-        path:"login",
-        element:<PrivateRoute>
-          <Login></Login>
-        </PrivateRoute>
-      }
+        path: "/auth/login",
+        Component: Login,
+      },
     ],
   },
 ]);

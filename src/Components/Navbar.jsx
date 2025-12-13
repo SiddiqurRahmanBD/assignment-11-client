@@ -67,13 +67,20 @@ const Navbar = () => {
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal text-lg font-semibold px-1">
           <li>
-            <NavLink to="/"><Home/> Home</NavLink>
+            <NavLink to="/" className="hover:text-[#700404]">
+              <Home /> Home
+            </NavLink>
           </li>
           <li>
-            <NavLink to="/search-page"> <SearchIcon/> Search </NavLink>
+            <NavLink to="/search-page" className="hover:text-[#700404]">
+              {" "}
+              <SearchIcon /> Search{" "}
+            </NavLink>
           </li>
           <li>
-            <NavLink to="/donation-requests"><BiDonateBlood/> Blood Donation requests</NavLink>
+            <NavLink to="/donation-requests" className="hover:text-[#700404]">
+              <BiDonateBlood /> Blood Donation requests
+            </NavLink>
           </li>
         </ul>
       </div>
@@ -125,7 +132,7 @@ const Navbar = () => {
           </div>
         ) : (
           <div className="flex">
-            <NavLink to="/auth/login" className="btn bg-green-700 text-white">
+            <NavLink to="/auth/login" className="btn btn-primary text-white">
               Login
             </NavLink>
           </div>
