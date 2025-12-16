@@ -2,8 +2,9 @@ import React, { useContext } from "react";
 
 import { Navigate, useLocation } from "react-router";
 
-import LoaderSpinner from "../Components/LoaderSpinner";
+
 import { AuthContext } from "../Provider/AuthContext";
+import LoaderSpinner from "../Components/Shared/LoaderSpinner";
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);

@@ -1,13 +1,12 @@
 import React, { useContext } from "react";
-import logo from "../assets/blood-logo.png";
+import logo from "../../assets/blood-logo.png";
 
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import { NavLink } from "react-router";
-import { AuthContext } from "../Provider/AuthContext";
 import { Home, SearchIcon } from "lucide-react";
-import { GiBlood } from "react-icons/gi";
 import { BiDonateBlood } from "react-icons/bi";
+import { AuthContext } from "../../Provider/AuthContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -110,7 +109,9 @@ const Navbar = () => {
                     <p className="text-red-600">{user.email}</p>
                   </div>
                   <li>
-                    <NavLink to="/add-food">Dashboard</NavLink>
+                    <NavLink to="/dashboard/my-donation-requests">
+                      Dashboard
+                    </NavLink>
                   </li>
                   <li>
                     <NavLink to="/manage-my-foods">Manage My Foods</NavLink>
@@ -131,7 +132,10 @@ const Navbar = () => {
             </ul>
           </div>
         ) : (
-          <div className="flex">
+          <div className="flex gap-5">
+            <NavLink to="/auth/register" className="btn btn-primary text-white">
+             Register
+            </NavLink>
             <NavLink to="/auth/login" className="btn btn-primary text-white">
               Login
             </NavLink>

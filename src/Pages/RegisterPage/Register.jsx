@@ -1,11 +1,11 @@
-
 import React, { useContext, useEffect, useState } from "react";
-import {Link, useNavigate } from "react-router";
-import { AuthContext } from "../../../Provider/AuthContext";
+import { Link, useNavigate } from "react-router";
+import { AuthContext } from "../../Provider/AuthContext";
 import { IoEyeOff } from "react-icons/io5";
 import { FaEye } from "react-icons/fa";
 import axios from "axios";
 import { toast } from "react-toastify";
+import useAxios from "../../Hooks/useAxios";
 
 const Register = () => {
   const [nameError, setNameError] = useState("");
@@ -15,31 +15,31 @@ const Register = () => {
   const [show, setShow] = useState(false);
 
   const navigate = useNavigate();
-  const { createUser, setUser, updateUser } = useContext(AuthContext);
+  const { createUser, updateUser } = useContext(AuthContext);
 
-  const [districts, setDistricts] = useState([])
-  const [upzilas, setUpzilas] = useState([])
+  const [districts, setDistricts] = useState([]);
+  const [upzilas, setUpzilas] = useState([]);
 
-  const [district, setDistrict] = useState('')
-  const [upzila, setUpzila] = useState('')
- 
-  
-useEffect(() => {
-  axios
-    .get("/district.json")
-    .then((res) => {
-      setDistricts(res.data);
-    })
-    .catch((err) => console.log("District error:", err));
+  const [district, setDistrict] = useState("");
+  const [upzila, setUpzila] = useState("");
 
-  axios
-    .get("/upzila.json")
-    .then((res) => {
-      setUpzilas(res.data);
-    })
-    .catch((err) => console.log("Upzila error:", err));
-}, []);
+  const axiosInstance = useAxios();
 
+  useEffect(() => {
+    axios
+      .get("/district.json")
+      .then((res) => {
+        setDistricts(res.data);
+      })
+      .catch((err) => console.log("District error:", err));
+
+    axios
+      .get("/upzila.json")
+      .then((res) => {
+        setUpzilas(res.data);
+      })
+      .catch((err) => console.log("Upzila error:", err));
+  }, []);
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -85,8 +85,6 @@ useEffect(() => {
       setConfirmPasswordError("");
     }
 
-
-
     const res = await axios.post(
       `https://api.imgbb.com/1/upload?key=80872c72797ec82a69fc4e1b1174a045`,
       { image: file },
@@ -104,25 +102,24 @@ useEffect(() => {
       bloodGroup,
       photoURL,
       district,
-      upzila
+      upzila,
     };
-    console.log(formdata);
+  
 
     createUser(email, password)
       .then(() => {
         // const user = result.user;
         toast.success("Registered Successfully!");
 
-        updateUser({ displayName:name, photoURL: photoURL })
+        updateUser({ displayName: name, photoURL: photoURL })
           .then(() => {
-            axios.post("http://localhost:3000/users", formdata);
+           axiosInstance.post("/users", formdata);
             // setUser({ ...user, displayName: name, photoURL: photo });
             navigate("/");
           })
           .catch((error) => console.log(error));
       })
       .catch((error) => toast.error(error.code));
-
   };
 
   return (
@@ -168,7 +165,7 @@ useEffect(() => {
                   defaultValue=""
                 >
                   <option value="" disabled>
-                    Select your blood group
+                    Select Your Blood Group
                   </option>
                   <option value="A+">A+</option>
                   <option value="A-">A-</option>

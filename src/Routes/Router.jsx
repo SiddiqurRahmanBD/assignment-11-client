@@ -1,12 +1,14 @@
 import { createBrowserRouter } from "react-router";
 import MainLayout from "../Layouts/MainLayout";
 import Home from "../Pages/Home/Home";
-import SearchPage from "../Pages/Home/SearchPage/SearchPage";
-import DonationRequests from "../Pages/Home/DonationRequests/DonationRequests";
+import SearchPage from "../Pages/SearchPage/SearchPage";
+import DonationRequests from "../Pages/DonationRequests/DonationRequests";
 import PrivateRoute from "./PrivateRoute";
-import Login from "../Pages/Home/LoginPage/Login";
-import Register from "../Pages/Home/RegisterPage/Register";
-
+import Login from "../Pages/LoginPage/Login";
+import Register from "../Pages/RegisterPage/Register";
+import DashboardLayout from "../Layouts/DashboardLayout";
+import MyDonationRequests from "../Pages/Dashboard/MyDonationRequests";
+import CreateDonationRequest from "../Pages/Dashboard/CreateDonationRequest";
 
 const router = createBrowserRouter([
   {
@@ -18,20 +20,38 @@ const router = createBrowserRouter([
         Component: Home,
       },
       {
-        path: "/search-page",
+        path: "search-page",
         Component: SearchPage,
       },
       {
-        path: "/donation-requests",
+        path: "donation-requests",
         Component: DonationRequests,
       },
       {
-        path: "/auth/login",
+        path: "auth/login",
         Component: Login,
       },
       {
-        path: "/auth/register",
+        path: "auth/register",
         Component: Register,
+      },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoute>
+        <DashboardLayout></DashboardLayout>
+      </PrivateRoute>
+    ),
+    children: [
+      {
+        path: "my-donation-requests",
+        Component: MyDonationRequests,
+      },
+      {
+        path: "create-donation-request",
+        Component: CreateDonationRequest,
       },
     ],
   },

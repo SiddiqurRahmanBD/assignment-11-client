@@ -1,11 +1,11 @@
 import React from "react";
 import { MdEmail } from "react-icons/md";
 import { PiPhoneCall } from "react-icons/pi";
-import logo from "../assets/blood-logo.png";
-import xIcon from "../assets/x-logo-50.png";
-import linkedinIcon from "../assets/inkedin-48.png";
-import facebookIcon from "../assets/facebook-logo-48.png";
-import intagramIcon from "../assets/nstagram-logo-48.png";
+import logo from "../../assets/blood-logo.png";
+import xIcon from "../../assets/x-logo-50.png";
+import linkedinIcon from "../../assets/inkedin-48.png";
+import facebookIcon from "../../assets/facebook-logo-48.png";
+import intagramIcon from "../../assets/nstagram-logo-48.png";
 
 const Footer = () => {
   return (
