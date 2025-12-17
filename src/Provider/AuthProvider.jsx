@@ -12,12 +12,17 @@ import {
 import { auth } from '../Firebase/Firebase.config';
 
 import { AuthContext } from "./AuthContext";
+import useAxios from "../Hooks/useAxios";
 
 const googleProvider = new GoogleAuthProvider();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [roleLoading, setRoleLoading] = useState(true);
+  const [role, setRole] =useState('');
+  const [userStatus, setUserStatus] = useState('');
+  const axiosInstance = useAxios();
 
   const createUser = (email, password) => {
     setLoading(true);
@@ -57,6 +62,17 @@ const AuthProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() =>{
+    if(!user) return
+    axiosInstance.get(`/users/role/${user.email}`)
+    .then(res => {
+      setRole(res.data.role)
+      setUserStatus(res.data.status)
+      setRoleLoading(false)
+    })
+    
+  },[axiosInstance, user])
+
   const authData = {
     user,
     setUser,
@@ -68,6 +84,9 @@ const AuthProvider = ({ children }) => {
     updateUser,
     googleSignIn,
     forgetPass,
+    role,
+    roleLoading,
+    userStatus
   };
 
   return (

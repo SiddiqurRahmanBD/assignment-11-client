@@ -7,17 +7,17 @@ import { AuthContext } from "../Provider/AuthContext";
 import LoaderSpinner from "../Components/Shared/LoaderSpinner";
 
 const PrivateRoute = ({ children }) => {
-  const { user, loading } = useContext(AuthContext);
+  const { user, loading, roleLoading, userStatus } = useContext(AuthContext);
 
   const location = useLocation();
-  if (loading) {
+  if (loading || roleLoading) {
     return <LoaderSpinner/>
   }
 
-  if (user && user?.email) {
-    return children;
+  if (!user || !userStatus === "Active"  ) {
+    return <Navigate state={location.pathname} to="/auth/login"></Navigate>;
   }
-  return <Navigate state={location.pathname} to="/auth/login"></Navigate>;
+  return children;
 };
 
 export default PrivateRoute;
