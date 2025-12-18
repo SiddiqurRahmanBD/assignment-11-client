@@ -1,113 +1,172 @@
-import { NotebookPenIcon, NotebookTextIcon, User2Icon, Users } from "lucide-react";
 import React, { useContext } from "react";
-import { MdRequestPage } from "react-icons/md";
+import {
+  CircleUserRound,
+  GitPullRequest,
+  GitPullRequestClosed,
+  NotebookPenIcon,
+  Users,
+  Home,
+  Menu,
+  LayoutDashboard,
+  Heart,
+} from "lucide-react";
 import { Link, NavLink, Outlet } from "react-router";
 import { AuthContext } from "../Provider/AuthContext";
 
 const DashboardLayout = () => {
   const { role } = useContext(AuthContext);
+
+  // Reusable NavLink styling for a gorgeous active state
+  const navLinkStyles = ({ isActive }) =>
+    `flex items-center gap-3 px-4 py-3 rounded-2xl font-bold transition-all duration-300 ${
+      isActive
+        ? "bg-red-600 text-white shadow-lg shadow-red-200"
+        : "text-slate-600 hover:bg-red-50 hover:text-red-600"
+    }`;
+
   return (
-    <div className="drawer lg:drawer-open">
+    <div className="drawer lg:drawer-open bg-[#FDFEFF]">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content">
-        {/* Navbar */}
-        <nav className="navbar w-full bg-base-300">
-          <label
-            htmlFor="my-drawer-4"
-            aria-label="open sidebar"
-            className="btn btn-square btn-ghost"
-          >
-            {/* Sidebar toggle icon */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              strokeWidth="2"
-              fill="none"
-              stroke="currentColor"
-              className="my-1.5 inline-block size-4"
+
+      <div className="drawer-content flex flex-col h-screen overflow-hidden">
+        {/* Modern Top Navbar */}
+        <header className="h-20 flex items-center justify-between px-6 bg-white/80 backdrop-blur-md border-b border-slate-100 z-10">
+          <div className="flex items-center gap-4">
+            <label
+              htmlFor="my-drawer-4"
+              className="p-2 hover:bg-slate-100 rounded-xl lg:hidden cursor-pointer transition-colors"
             >
-              <path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
-              <path d="M9 4v16"></path>
-              <path d="M14 10l2 2l-2 2"></path>
-            </svg>
-          </label>
-          <div className="px-4">Save Life Dashboard</div>
-        </nav>
-        {/* Page content here */}
-        <Outlet></Outlet>
-        {/* <div className="p-4">Page Content</div> */}
+              <Menu className="text-slate-600" />
+            </label>
+            <div className="hidden md:block">
+              <h2 className="text-xl font-black text-slate-800 tracking-tight">
+                SaveLife <span className="text-red-600">Portal</span>
+              </h2>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest leading-none mt-1">
+                {role} Dashboard
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div className="bg-red-50 text-red-600 text-xs font-black px-3 py-1.5 rounded-full uppercase tracking-wider">
+              Status: Active
+            </div>
+          </div>
+        </header>
+
+        {/* Main Content Area */}
+        <main className="flex-1 overflow-y-auto bg-slate-50/50 p-4 md:p-8">
+          <div className="max-w-6xl mx-auto">
+            <Outlet />
+          </div>
+        </main>
       </div>
 
-      <div className="drawer-side is-drawer-close:overflow-visible">
-        <label
-          htmlFor="my-drawer-4"
-          aria-label="close sidebar"
-          className="drawer-overlay"
-        ></label>
-        <div className="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-14 is-drawer-open:w-64">
-          {/* Sidebar content here */}
-          <ul className="menu w-full grow">
-            {/* List item */}
-            <li>
-              <Link
-                to="/"
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                data-tip="Homepage"
-              >
-                {/* Home icon */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  strokeLinejoin="round"
-                  strokeLinecap="round"
-                  strokeWidth="2"
-                  fill="none"
-                  stroke="currentColor"
-                  className="my-1.5 inline-block size-4"
-                >
-                  <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path>
-                  <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                </svg>
-                <span className="is-drawer-close:hidden">Homepage</span>
-              </Link>
-            </li>
+      {/* Sidebar */}
+      <div className="drawer-side z-20">
+        <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
 
-            {/* List item */}
-            {role === "Donor" && (
+        <aside className="w-72 min-h-full bg-white border-r border-slate-100 p-6 flex flex-col shadow-2xl lg:shadow-none">
+          {/* Logo Area */}
+          <div className="flex items-center gap-3 mb-10 px-2">
+            <div className="p-2 bg-red-600 rounded-xl shadow-lg shadow-red-200">
+              <Heart className="text-white w-6 h-6 fill-white" />
+            </div>
+            <span className="text-2xl font-black text-slate-900 tracking-tight">
+              SaveLife
+            </span>
+          </div>
+
+          <nav className="flex-1 space-y-2">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 ml-4">
+              Main Menu
+            </p>
+
+            <NavLink
+              to="/"
+              className="flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-slate-600 hover:bg-slate-100 transition-all"
+            >
+              <Home size={20} />
+              <span>Back to Home</span>
+            </NavLink>
+
+            <NavLink to="/dashboard/profile" className={navLinkStyles}>
+              <CircleUserRound size={20} />
+              <span>My Profile</span>
+            </NavLink>
+
+            <div className="h-px bg-slate-100 my-6 mx-4" />
+
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 ml-4">
+              Management
+            </p>
+
+            {/* Donor Role Links */}
+            {(role === "Donor" || role === "donor") && (
               <>
-                <li>
-                  <NavLink to="/dashboard/my-donation-requests">
-                    <NotebookTextIcon size={18} />
-                    <span className="is-drawer-close:hidden">
-                      My Donation Requests
-                    </span>
-                  </NavLink>
-                </li>
+                <NavLink
+                  to="/dashboard/my-donation-requests"
+                  className={navLinkStyles}
+                >
+                  <GitPullRequest size={20} />
+                  <span>My Requests</span>
+                </NavLink>
 
-                <li>
-                  <NavLink to="/dashboard/create-donation-request">
-                    <NotebookPenIcon size={18} />
-                    <span className="is-drawer-close:hidden">
-                      Create Donation Request
-                    </span>
-                  </NavLink>
-                </li>
+                <NavLink
+                  to="/dashboard/create-donation-request"
+                  className={navLinkStyles}
+                >
+                  <NotebookPenIcon size={20} />
+                  <span>New Request</span>
+                </NavLink>
               </>
             )}
 
-            {role === "Admin" && (
-              <li>
-                <NavLink to="/dashboard/all-users">
-                  {" "}
-                  <Users size={18}/>
-                  <span className="is-drawer-close:hidden"> All Users</span>
+            {/* Admin Role Links */}
+            {(role === "Admin" || role === "admin") && (
+              <>
+                <NavLink to="/dashboard/all-users" className={navLinkStyles}>
+                  <Users size={20} />
+                  <span>User Directory</span>
                 </NavLink>
-              </li>
+                <NavLink
+                  to="/dashboard/all-blood-donation-request"
+                  className={navLinkStyles}
+                >
+                  <GitPullRequestClosed size={20} />
+                  <span>Global Requests</span>
+                </NavLink>
+              </>
             )}
-          </ul>
-        </div>
+
+            {/* Volunteer Role Links */}
+            {(role === "Volunteer" || role === "volunteer") && (
+              <NavLink
+                to="/dashboard/all-blood-donation-request"
+                className={navLinkStyles}
+              >
+                <GitPullRequestClosed size={20} />
+                <span>Pending Requests</span>
+              </NavLink>
+            )}
+          </nav>
+
+          {/* Sidebar Footer */}
+          <div className="mt-auto pt-6 border-t border-slate-50">
+            <div className="bg-slate-50 p-4 rounded-[2rem] flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center text-red-600">
+                <LayoutDashboard size={20} />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-tighter">
+                  SaveLife v1.0
+                </p>
+                <p className="text-[10px] text-slate-400">© 2025 Platform</p>
+              </div>
+            </div>
+          </div>
+        </aside>
       </div>
     </div>
   );

@@ -1,205 +1,193 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../../Provider/AuthContext";
-import { IoEyeOff } from "react-icons/io5";
+import { IoEyeOff, IoCloudUploadOutline } from "react-icons/io5";
 import { FaEye } from "react-icons/fa";
+import { User, Mail, Lock, MapPin, Droplet, CheckCircle2 } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import useAxios from "../../Hooks/useAxios";
 
 const Register = () => {
-  const [nameError, setNameError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
-
   const [show, setShow] = useState(false);
-
-  const navigate = useNavigate();
-  const { createUser, updateUser } = useContext(AuthContext);
-
+  const [loading, setLoading] = useState(false);
   const [districts, setDistricts] = useState([]);
   const [upzilas, setUpzilas] = useState([]);
-
   const [district, setDistrict] = useState("");
   const [upzila, setUpzila] = useState("");
 
+  const navigate = useNavigate();
+  const { createUser, updateUser } = useContext(AuthContext);
   const axiosInstance = useAxios();
 
   useEffect(() => {
-    axios
-      .get("/district.json")
-      .then((res) => {
-        setDistricts(res.data);
-      })
-      .catch((err) => console.log("District error:", err));
-
-    axios
-      .get("/upzila.json")
-      .then((res) => {
-        setUpzilas(res.data);
-      })
-      .catch((err) => console.log("Upzila error:", err));
+    axios.get("/district.json").then((res) => setDistricts(res.data));
+    axios.get("/upzila.json").then((res) => setUpzilas(res.data));
   }, []);
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     const form = e.target;
     const name = form.name.value;
-    const photo = form.photo;
-    const file = photo.files[0];
+    const file = form.photo.files[0];
     const email = form.email.value;
     const password = form.password.value;
-    const confirmPassword = form.confirmPassword.value;
     const bloodGroup = form.bloodGroup.value;
 
-    if (name.length < 5) {
-      setNameError("Use more than 5 Characters");
-      return;
-    } else {
-      setNameError("");
-    }
-
-    const emailRegEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!emailRegEx.test(email)) {
-      console.log("Invalid email");
-      return;
-    }
-
-    const regex = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
-
-    if (!regex.test(password)) {
-      setPasswordError(
-        "Password must have at least one uppercase letter, one lowercase letter, and be at least 6 characters long."
+    try {
+      const imgData = new FormData();
+      imgData.append("image", file);
+      const res = await axios.post(
+        `https://api.imgbb.com/1/upload?key=80872c72797ec82a69fc4e1b1174a045`,
+        imgData
       );
-      return;
-    } else {
-      setPasswordError("");
+      const photoURL = res.data.data.display_url;
+
+      const formdata = {
+        name,
+        email,
+        bloodGroup,
+        photoURL,
+        district,
+        upzila,
+        role: "donor",
+        status: "active",
+      };
+
+      await createUser(email, password);
+      await updateUser({ displayName: name, photoURL: photoURL });
+      await axiosInstance.post("/users", formdata);
+
+      toast.success("Welcome to SaveLife!");
+      navigate("/");
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
-
-    if (password !== confirmPassword) {
-      setConfirmPasswordError("Passwords do not match");
-      return;
-    } else {
-      setConfirmPasswordError("");
-    }
-
-    const res = await axios.post(
-      `https://api.imgbb.com/1/upload?key=80872c72797ec82a69fc4e1b1174a045`,
-      { image: file },
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-    const photoURL = res.data.data.display_url;
-
-    const formdata = {
-      name,
-      email,
-      bloodGroup,
-      photoURL,
-      district,
-      upzila,
-    };
-  
-
-    createUser(email, password)
-      .then(() => {
-        // const user = result.user;
-        toast.success("Registered Successfully!");
-
-        updateUser({ displayName: name, photoURL: photoURL })
-          .then(() => {
-           axiosInstance.post("/users", formdata);
-            // setUser({ ...user, displayName: name, photoURL: photo });
-            navigate("/");
-          })
-          .catch((error) => console.log(error));
-      })
-      .catch((error) => toast.error(error.code));
   };
 
   return (
-    <div>
-      <title>Register</title>
-
-      <div className="hero py-10 min-h-screen">
-        <div className="card bg-base-100 w-full max-w-sm shadow-2xl">
-          <h1 className="text-2xl text-center pt-5 font-semibold">
-            Register Now
+    <div className="min-h-screen bg-[#FDFEFF] flex items-center justify-center py-16 px-4">
+      <div className="max-w-4xl w-full">
+        <div className="text-center mb-10">
+          <h1 className="text-4xl font-extrabold text-slate-900">
+            Join SaveLife
           </h1>
+          <p className="text-slate-500 mt-2">
+            Create a fresh account to start saving lives.
+          </p>
+        </div>
 
-          <div className="card-body">
-            <form onSubmit={handleRegister}>
-              <fieldset className="fieldset">
-                <label className="label text-lg">Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  className="input"
-                  placeholder="Enter Your Full Name"
-                  required
-                />
-                {nameError && (
-                  <p className="text-xs text-red-500">{nameError}</p>
-                )}
+        <div className="bg-white/80 backdrop-blur-xl border border-slate-100 rounded-[2.5rem] p-8 md:p-12 shadow-xl shadow-slate-200/50">
+          {/* Added autoComplete="off" to form to prevent global pre-fill */}
+          <form
+            onSubmit={handleRegister}
+            className="space-y-6"
+            autoComplete="off"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Name */}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 ml-1">
+                  Full Name
+                </label>
+                <div className="relative group">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-red-500 w-5 h-5" />
+                  <input
+                    type="text"
+                    name="name"
+                    className="w-full h-14 pl-12 pr-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all"
+                    placeholder="Enter your name"
+                    required
+                  />
+                </div>
+              </div>
 
-                <label className="label text-lg">Photo URL</label>
-                <input
-                  type="file"
-                  name="photo"
-                  className="input"
-                  placeholder="Photo URL"
-                  required
-                />
+              {/* Email - Using autoComplete="none" to prevent browser suggestion */}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 ml-1">
+                  Email Address
+                </label>
+                <div className="relative group">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-red-500 w-5 h-5" />
+                  <input
+                    type="email"
+                    name="email"
+                    autoComplete="none"
+                    className="w-full h-14 pl-12 pr-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all"
+                    placeholder="email@example.com"
+                    required
+                  />
+                </div>
+              </div>
 
-                <label className="label text-lg">Blood Group</label>
-
-                <select
-                  name="bloodGroup"
-                  className="select select-bordered "
-                  required
-                  defaultValue=""
-                >
-                  <option value="" disabled>
-                    Select Your Blood Group
-                  </option>
-                  <option value="A+">A+</option>
-                  <option value="A-">A-</option>
-                  <option value="B+">B+</option>
-                  <option value="B-">B-</option>
-                  <option value="AB+">AB+</option>
-                  <option value="AB-">AB-</option>
-                  <option value="O+">O+</option>
-                  <option value="O-">O-</option>
-                </select>
-
-                <select
-                  value={district}
-                  onChange={(e) => setDistrict(e.target.value)}
-                  className="select select-bordered "
-                  defaultValue=""
-                >
-                  <option value="" disabled>
-                    Select your District
-                  </option>
-                  {districts.map((d) => (
-                    <option value={d?.name} key={d?.id}>
-                      {d?.name}
+              {/* Blood Group */}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 ml-1">
+                  Blood Group
+                </label>
+                <div className="relative">
+                  <Droplet className="absolute left-4 top-1/2 -translate-y-1/2 text-red-500 w-5 h-5 z-10" />
+                  <select
+                    name="bloodGroup"
+                    className="w-full h-14 pl-12 pr-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all appearance-none cursor-pointer"
+                    required
+                  >
+                    <option value="" disabled selected>
+                      Select Blood Group
                     </option>
-                  ))}
-                </select>
+                    {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(
+                      (g) => (
+                        <option key={g} value={g}>
+                          {g}
+                        </option>
+                      )
+                    )}
+                  </select>
+                </div>
+              </div>
+
+              {/* District */}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 ml-1">
+                  District
+                </label>
+                <div className="relative">
+                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 z-10" />
+                  <select
+                    value={district}
+                    onChange={(e) => setDistrict(e.target.value)}
+                    className="w-full h-14 pl-12 pr-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all appearance-none cursor-pointer"
+                    required
+                  >
+                    <option value="" disabled>
+                      Choose District
+                    </option>
+                    {districts.map((d) => (
+                      <option value={d?.name} key={d?.id}>
+                        {d?.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Upazila */}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 ml-1">
+                  Upazila
+                </label>
                 <select
                   value={upzila}
                   onChange={(e) => setUpzila(e.target.value)}
-                  className="select select-bordered "
-                  defaultValue=""
+                  className="w-full h-14 px-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all cursor-pointer"
+                  required
                 >
                   <option value="" disabled>
-                    Select your Upzila
+                    Choose Upazila
                   </option>
                   {upzilas.map((u) => (
                     <option value={u?.name} key={u?.id}>
@@ -207,72 +195,90 @@ const Register = () => {
                     </option>
                   ))}
                 </select>
+              </div>
 
-                <label className="label text-lg">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  autoComplete="off"
-                  className="input"
-                  placeholder="Enter Your Email Address"
-                  required
-                />
+              {/* Photo */}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 ml-1">
+                  Profile Photo
+                </label>
+                <label className="flex items-center gap-3 w-full h-14 px-4 bg-slate-50 border-2 border-slate-100 border-dashed rounded-2xl cursor-pointer hover:bg-red-50 transition-all">
+                  <IoCloudUploadOutline className="w-6 h-6 text-slate-400" />
+                  <span className="text-slate-500 text-sm font-medium">
+                    Upload Image
+                  </span>
+                  <input type="file" name="photo" className="hidden" required />
+                </label>
+              </div>
 
-                <div className="relative">
-                  <label className="label text-lg">Password</label>
+              {/* Password - Using autoComplete="new-password" */}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 ml-1">
+                  Password
+                </label>
+                <div className="relative group">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                   <input
                     type={show ? "text" : "password"}
                     name="password"
                     autoComplete="new-password"
-                    className="input"
-                    placeholder="Enter Your Password"
+                    placeholder="Create Password"
+                    className="w-full h-14 pl-12 pr-12 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all"
                     required
                   />
-                  {passwordError && (
-                    <p className="text-xs text-red-500">{passwordError}</p>
-                  )}
-                  <span
+                  <button
+                    type="button"
                     onClick={() => setShow(!show)}
-                    className="absolute right-[25px] top-[42px] cursor-pointer z-50"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                   >
-                    {show ? <FaEye size={15} /> : <IoEyeOff size={15} />}
-                  </span>
+                    {show ? <FaEye size={18} /> : <IoEyeOff size={18} />}
+                  </button>
                 </div>
+              </div>
 
-                <div className="relative">
-                  <label className="label text-lg">Confirm Password</label>
+              {/* Confirm Password */}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 ml-1">
+                  Confirm Password
+                </label>
+                <div className="relative group">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                   <input
                     type={show ? "text" : "password"}
                     name="confirmPassword"
                     autoComplete="new-password"
-                    className="input"
-                    placeholder="Confirm Your Password"
+                    placeholder="Repeat Password"
+                    className="w-full h-14 pl-12 pr-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all"
                     required
                   />
-
-                  {confirmPasswordError && (
-                    <p className="text-xs text-red-500">
-                      {confirmPasswordError}
-                    </p>
-                  )}
                 </div>
+              </div>
+            </div>
 
-                <button
-                  className="btn btn-primary text-white hover:bg-orange-400 hover:text-black mt-4"
-                  type="submit"
-                >
-                  Register
-                </button>
-              </fieldset>
-            </form>
+            <button
+              disabled={loading}
+              type="submit"
+              className="w-full h-14 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-bold text-lg shadow-lg shadow-red-100 transition-all active:scale-[0.99] flex items-center justify-center gap-2 mt-4"
+            >
+              {loading ? (
+                <span className="loading loading-spinner"></span>
+              ) : (
+                <>
+                  <CheckCircle2 className="w-5 h-5" /> Create New Account
+                </>
+              )}
+            </button>
+          </form>
 
-            <p className="text-center">
-              Already have an account?{" "}
-              <Link className="text-green-500" to="/auth/login">
-                Login
-              </Link>
-            </p>
-          </div>
+          <p className="text-center mt-8 text-slate-500 font-medium">
+            Joined before?{" "}
+            <Link
+              className="text-red-600 font-bold hover:underline"
+              to="/auth/login"
+            >
+              Login
+            </Link>
+          </p>
         </div>
       </div>
     </div>

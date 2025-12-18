@@ -1,10 +1,15 @@
 import { MapPin, ThumbsUp } from 'lucide-react';
 import React from 'react';
+import Banner from './Banner';
+import FeaturedSection from './FeaturedSection';
+import ContactUs from './ContactUs';
 
 const Home = () => {
     return (
       <div>
-        <h1>Home Page</h1>
+       <Banner></Banner>
+       <FeaturedSection></FeaturedSection>
+       <ContactUs></ContactUs>
       </div>
     );
 };

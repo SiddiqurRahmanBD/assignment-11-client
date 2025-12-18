@@ -1,10 +1,15 @@
 import React, { useContext } from "react";
 import logo from "../../assets/blood-logo.png";
-
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router";
-import { NavLink } from "react-router";
-import { Home, SearchIcon } from "lucide-react";
+import { useNavigate, NavLink, Link } from "react-router";
+import {
+  Home,
+  SearchIcon,
+  Heart,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+} from "lucide-react";
 import { BiDonateBlood } from "react-icons/bi";
 import { AuthContext } from "../../Provider/AuthContext";
 
@@ -18,129 +23,176 @@ const Navbar = () => {
         navigate("/");
         toast.success("Logged Out successfully");
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((err) => console.log(err));
   };
 
+  const navLinks = (
+    <>
+      <li>
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            `flex items-center gap-2 font-bold px-4 py-2 rounded-xl transition-all ${
+              isActive
+                ? "bg-red-50 text-red-600 shadow-sm"
+                : "hover:bg-red-50 hover:text-red-600"
+            }`
+          }
+        >
+          <Home size={18} /> Home
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to="/search-page"
+          className={({ isActive }) =>
+            `flex items-center gap-2 font-bold px-4 py-2 rounded-xl transition-all ${
+              isActive
+                ? "bg-red-50 text-red-600 shadow-sm"
+                : "hover:bg-red-50 hover:text-red-600"
+            }`
+          }
+        >
+          <SearchIcon size={18} /> Search
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to="/donation-requests"
+          className={({ isActive }) =>
+            `flex items-center gap-2 font-bold px-4 py-2 rounded-xl transition-all ${
+              isActive
+                ? "bg-red-50 text-red-600 shadow-sm"
+                : "hover:bg-red-50 hover:text-red-600"
+            }`
+          }
+        >
+          <BiDonateBlood size={20} /> Requests
+        </NavLink>
+      </li>
+      {/* Changed 'Available Foods' to 'Donation Camps' for consistency */}
+      {/* <li>
+        <NavLink
+          to="/donation-camps"
+          className={({ isActive }) =>
+            `flex items-center gap-2 font-bold px-4 py-2 rounded-xl transition-all ${
+              isActive
+                ? "bg-red-50 text-red-600 shadow-sm"
+                : "hover:bg-red-50 hover:text-red-600"
+            }`
+          }
+        >
+          <Heart size={18} /> Camps
+        </NavLink>
+      </li> */}
+    </>
+  );
+
   return (
-    <div className="navbar bg-base-300 shadow-sm">
-      <div className="navbar-start">
-        <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h8m-8 6h16"
-              />
-            </svg>
-          </div>
-
-          <ul
-            tabIndex="-1"
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
-          >
-            <li>
-              <NavLink to="/">Home</NavLink>
-            </li>
-            <li>
-              <NavLink to="/available-foods">Available Foods</NavLink>
-            </li>
-          </ul>
-        </div>
-
-        <img src={logo} className="h-20 w-20" alt="" />
-        <h1 className=" text-[#9f0707dc] text-2xl font-bold font-serif">
-          Save<span className="text-orange-400">Life</span>
-        </h1>
-      </div>
-
-      <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal text-lg font-semibold px-1">
-          <li>
-            <NavLink to="/" className="hover:text-[#700404]">
-              <Home /> Home
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/search-page" className="hover:text-[#700404]">
-              {" "}
-              <SearchIcon /> Search{" "}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/donation-requests" className="hover:text-[#700404]">
-              <BiDonateBlood /> Blood Donation requests
-            </NavLink>
-          </li>
-        </ul>
-      </div>
-
-      <div className="navbar-end">
-        {user ? (
-          <div className="dropdown dropdown-end">
+    <div className="sticky top-0 z-[1000] w-full bg-white/70 backdrop-blur-lg border-b border-red-50 shadow-sm">
+      <div className="navbar max-w-7xl mx-auto py-3">
+        {/* Navbar Start */}
+        <div className="navbar-start">
+          <div className="dropdown">
             <div
               tabIndex={0}
               role="button"
-              className="btn btn-ghost btn-circle avatar"
+              className="btn btn-ghost lg:hidden p-2 text-red-600"
             >
-              <div className=" w-30 rounded-full">
-                <img className="" src={user.photoURL} alt="" />
-              </div>
+              <Menu size={28} />
             </div>
             <ul
-              tabIndex="-1"
-              className="menu menu-md dropdown-content bg-base-100 rounded-box z-50! mt-3 w-52 p-2 shadow"
+              tabIndex={0}
+              className="menu menu-sm dropdown-content mt-3 z-[1] p-4 shadow-2xl bg-white rounded-[2rem] w-64 border border-red-50 gap-2"
             >
-              {user && (
-                <div className="">
-                  <div className="text-center">
-                    <h3 className="font-semibold text-xl">
-                      {user.displayName}
-                    </h3>
-                    <p className="text-red-600">{user.email}</p>
-                  </div>
-                  <li>
-                    <NavLink to="/dashboard/my-donation-requests">
-                      Dashboard
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink to="/manage-my-foods">Manage My Foods</NavLink>
-                  </li>
-                  <li>
-                    <NavLink to="/my-food-requests">My Food Requests</NavLink>
-                  </li>
-                </div>
-              )}
-              <li className="pt-3">
-                <button
-                  onClick={handleLogout}
-                  className=" btn btn-primary text-white hover:bg-yellow-300 hover:text-black"
-                >
-                  Logout
-                </button>
-              </li>
+              {navLinks}
             </ul>
           </div>
-        ) : (
-          <div className="flex gap-5">
-            <NavLink to="/auth/register" className="btn btn-primary text-white">
-             Register
-            </NavLink>
-            <NavLink to="/auth/login" className="btn btn-primary text-white">
-              Login
-            </NavLink>
-          </div>
-        )}
+
+          <Link to="/" className="flex items-center gap-1 group">
+            <div className="relative">
+              <img
+                src={logo}
+                className="h-12 w-12 md:h-14 md:w-14 object-contain group-hover:scale-110 transition-transform duration-300"
+                alt="SaveLife Logo"
+              />
+              <div className="absolute inset-0 bg-red-500/10 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </div>
+            <h1 className="text-2xl md:text-3xl font-black text-slate-800">
+              Save<span className="text-red-600">Life</span>
+            </h1>
+          </Link>
+        </div>
+
+        {/* Navbar Center (Desktop) */}
+        <div className="navbar-center hidden lg:flex">
+          <ul className="menu menu-horizontal gap-2">{navLinks}</ul>
+        </div>
+
+        {/* Navbar End */}
+        <div className="navbar-end gap-3">
+          {user ? (
+            <div className="dropdown dropdown-end">
+              <div
+                tabIndex={0}
+                role="button"
+                className="p-1 border-2 border-red-100 rounded-full hover:border-red-500 transition-all shadow-sm"
+              >
+                <div className="w-10 h-10 rounded-full overflow-hidden">
+                  <img
+                    src={user.photoURL}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+              <ul
+                tabIndex={0}
+                className="menu dropdown-content mt-4 z-[1] p-4 shadow-2xl bg-white rounded-3xl w-64 border border-red-50"
+              >
+                <div className="px-4 py-3 mb-2 border-b border-slate-50">
+                  <p className="font-black text-slate-800 text-lg truncate">
+                    {user.displayName}
+                  </p>
+                  <p className="text-xs font-bold text-red-500 truncate">
+                    {user.email}
+                  </p>
+                </div>
+                <li>
+                  <NavLink
+                    to="/dashboard"
+                    className="flex items-center gap-2 py-3 hover:bg-red-50 rounded-xl"
+                  >
+                    <LayoutDashboard size={18} /> Dashboard
+                  </NavLink>
+                </li>
+                <li>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 py-3 mt-2 bg-red-600 text-white hover:bg-red-700 rounded-xl shadow-lg shadow-red-200"
+                  >
+                    <LogOut size={18} /> Logout
+                  </button>
+                </li>
+              </ul>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link
+                to="/auth/login"
+                className="hidden sm:flex btn btn-ghost text-red-600 font-bold hover:bg-red-50 rounded-xl px-6"
+              >
+                Login
+              </Link>
+              <Link
+                to="/auth/register"
+                className="btn bg-red-600 hover:bg-red-700 border-none text-white font-bold rounded-xl px-6 shadow-lg shadow-red-200 transition-all hover:-translate-y-0.5"
+              >
+                Join Now
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

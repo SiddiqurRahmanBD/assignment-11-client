@@ -10,6 +10,9 @@ import DashboardLayout from "../Layouts/DashboardLayout";
 import MyDonationRequests from "../Pages/Dashboard/MyDonationRequests";
 import CreateDonationRequest from "../Pages/Dashboard/CreateDonationRequest";
 import AllUsers from "../Pages/Dashboard/AllUsers";
+import AllBloodDonationRequest from "../Pages/Dashboard/AllBloodDonationRequest";
+import Profile from "../Pages/Dashboard/Profile";
+import Dashboard from "../Pages/Dashboard/Dashboard";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +50,10 @@ const router = createBrowserRouter([
     ),
     children: [
       {
+        index: true,
+        Component: Dashboard
+      },
+      {
         path: "my-donation-requests",
         Component: MyDonationRequests,
       },
@@ -58,6 +65,14 @@ const router = createBrowserRouter([
         path: "all-users",
         Component: AllUsers,
       },
+      {
+        path: "all-blood-donation-request",
+        Component: AllBloodDonationRequest,
+      },
+      {
+        path:"profile",
+        Component: Profile
+      }
     ],
   },
 ]);
