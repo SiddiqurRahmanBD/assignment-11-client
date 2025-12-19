@@ -10,7 +10,7 @@ import {
   LayoutDashboard,
   Heart,
 } from "lucide-react";
-import { Link, NavLink, Outlet } from "react-router";
+import { NavLink, Outlet } from "react-router";
 import { AuthContext } from "../Provider/AuthContext";
 
 const DashboardLayout = () => {
@@ -89,6 +89,13 @@ const DashboardLayout = () => {
             >
               <Home size={20} />
               <span>Back to Home</span>
+            </NavLink>
+            <NavLink
+              to="/dashboard"
+              className="flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-slate-600 hover:bg-slate-100 transition-all"
+            >
+              <Home size={20} />
+              <span>Dashboard Home</span>
             </NavLink>
 
             <NavLink to="/dashboard/profile" className={navLinkStyles}>

@@ -12,31 +12,50 @@ const Register = () => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [districts, setDistricts] = useState([]);
+  const [districtId, setDistrictId] = useState("");
   const [upzilas, setUpzilas] = useState([]);
-  const [district, setDistrict] = useState("");
   const [upzila, setUpzila] = useState("");
 
   const navigate = useNavigate();
   const { createUser, updateUser } = useContext(AuthContext);
   const axiosInstance = useAxios();
 
+  // Load District and Upazila data
   useEffect(() => {
     axios.get("/district.json").then((res) => setDistricts(res.data));
     axios.get("/upzila.json").then((res) => setUpzilas(res.data));
   }, []);
 
+  // Reset Upazila when District changes
+  useEffect(() => {
+    setUpzila("");
+  }, [districtId]);
+
+  const filteredUpazilas = upzilas.filter((u) => u.district_id === districtId);
+
   const handleRegister = async (e) => {
     e.preventDefault();
-    setLoading(true);
-
     const form = e.target;
     const name = form.name.value;
-    const file = form.photo.files[0];
     const email = form.email.value;
     const password = form.password.value;
+    const confirmPassword = form.confirmPassword.value;
     const bloodGroup = form.bloodGroup.value;
+    const file = form.photo.files[0];
+
+    // Basic Validation
+    if (password !== confirmPassword) {
+      return toast.error("Passwords do not match!");
+    }
+
+    if (!districtId || !upzila) {
+      return toast.error("Please select your District and Upazila");
+    }
+
+    setLoading(true);
 
     try {
+      // 1. Upload Image to ImgBB
       const imgData = new FormData();
       imgData.append("image", file);
       const res = await axios.post(
@@ -45,25 +64,35 @@ const Register = () => {
       );
       const photoURL = res.data.data.display_url;
 
+      // 2. Find the District Name based on districtId
+      const selectedDistrict = districts.find((d) => d.id === districtId);
+
+      // 3. Prepare User Object
       const formdata = {
         name,
         email,
         bloodGroup,
         photoURL,
-        district,
+        district: selectedDistrict?.name || "",
         upzila,
         role: "donor",
         status: "active",
       };
 
+      // 4. Create User in Firebase
       await createUser(email, password);
+
+      // 5. Update Profile
       await updateUser({ displayName: name, photoURL: photoURL });
+
+      // 6. Save User Data to Database
       await axiosInstance.post("/users", formdata);
 
       toast.success("Welcome to SaveLife!");
       navigate("/");
     } catch (error) {
-      toast.error(error.message);
+      console.error(error);
+      toast.error(error.message || "An error occurred during registration");
     } finally {
       setLoading(false);
     }
@@ -82,7 +111,6 @@ const Register = () => {
         </div>
 
         <div className="bg-white/80 backdrop-blur-xl border border-slate-100 rounded-[2.5rem] p-8 md:p-12 shadow-xl shadow-slate-200/50">
-          {/* Added autoComplete="off" to form to prevent global pre-fill */}
           <form
             onSubmit={handleRegister}
             className="space-y-6"
@@ -106,7 +134,7 @@ const Register = () => {
                 </div>
               </div>
 
-              {/* Email - Using autoComplete="none" to prevent browser suggestion */}
+              {/* Email */}
               <div className="space-y-2">
                 <label className="text-sm font-bold text-slate-700 ml-1">
                   Email Address
@@ -116,7 +144,7 @@ const Register = () => {
                   <input
                     type="email"
                     name="email"
-                    autoComplete="none"
+                    autoComplete="off"
                     className="w-full h-14 pl-12 pr-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all"
                     placeholder="email@example.com"
                     required
@@ -136,9 +164,7 @@ const Register = () => {
                     className="w-full h-14 pl-12 pr-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all appearance-none cursor-pointer"
                     required
                   >
-                    <option value="" disabled selected>
-                      Select Blood Group
-                    </option>
+                    <option value="">Select Blood Group</option>
                     {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(
                       (g) => (
                         <option key={g} value={g}>
@@ -148,53 +174,6 @@ const Register = () => {
                     )}
                   </select>
                 </div>
-              </div>
-
-              {/* District */}
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 ml-1">
-                  District
-                </label>
-                <div className="relative">
-                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 z-10" />
-                  <select
-                    value={district}
-                    onChange={(e) => setDistrict(e.target.value)}
-                    className="w-full h-14 pl-12 pr-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all appearance-none cursor-pointer"
-                    required
-                  >
-                    <option value="" disabled>
-                      Choose District
-                    </option>
-                    {districts.map((d) => (
-                      <option value={d?.name} key={d?.id}>
-                        {d?.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Upazila */}
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 ml-1">
-                  Upazila
-                </label>
-                <select
-                  value={upzila}
-                  onChange={(e) => setUpzila(e.target.value)}
-                  className="w-full h-14 px-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all cursor-pointer"
-                  required
-                >
-                  <option value="" disabled>
-                    Choose Upazila
-                  </option>
-                  {upzilas.map((u) => (
-                    <option value={u?.name} key={u?.id}>
-                      {u?.name}
-                    </option>
-                  ))}
-                </select>
               </div>
 
               {/* Photo */}
@@ -211,7 +190,51 @@ const Register = () => {
                 </label>
               </div>
 
-              {/* Password - Using autoComplete="new-password" */}
+              {/* District */}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 ml-1">
+                  District
+                </label>
+                <div className="relative">
+                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 z-10" />
+                  <select
+                    value={districtId}
+                    onChange={(e) => setDistrictId(e.target.value)}
+                    required
+                    className="w-full h-14 pl-12 pr-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/10 focus:border-red-500 outline-none transition-all appearance-none cursor-pointer"
+                  >
+                    <option value="">Select District</option>
+                    {districts.map((d) => (
+                      <option key={d.id} value={d.id}>
+                        {d.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Upazila */}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 ml-1">
+                  Upazila
+                </label>
+                <select
+                  value={upzila}
+                  onChange={(e) => setUpzila(e.target.value)}
+                  required
+                  disabled={!districtId}
+                  className="w-full h-14 px-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/10 focus:border-red-500 outline-none transition-all appearance-none cursor-pointer disabled:opacity-50"
+                >
+                  <option value="">Select Upazila</option>
+                  {filteredUpazilas.map((u) => (
+                    <option key={u.id} value={u.name}>
+                      {u.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Password */}
               <div className="space-y-2">
                 <label className="text-sm font-bold text-slate-700 ml-1">
                   Password
@@ -246,7 +269,6 @@ const Register = () => {
                   <input
                     type={show ? "text" : "password"}
                     name="confirmPassword"
-                    autoComplete="new-password"
                     placeholder="Repeat Password"
                     className="w-full h-14 pl-12 pr-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all"
                     required

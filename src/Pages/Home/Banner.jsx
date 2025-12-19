@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router";
+import blood_donation from '../../assets/Blood-Donation.jpg';
 
 const Banner = () => {
   const navigate = useNavigate();
@@ -77,7 +78,7 @@ const Banner = () => {
           {/* Main Image with decorative border */}
           <div className="relative z-10 rounded-[3rem] overflow-hidden border-[12px] border-white shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
             <img
-              src="https://images.unsplash.com/photo-1542884748-2b87b36c6b90?q=80&w=1000&auto=format&fit=crop"
+              src={blood_donation}
               alt="Blood Donation"
               className="w-full h-[500px] object-cover"
             />
@@ -127,7 +128,7 @@ const Banner = () => {
       </div>
 
       {/* Tailwind Custom CSS for Animations */}
-      <style>{`
+      {/* <style>{`
         .clip-path-slant {
           clip-path: polygon(20% 0%, 100% 0%, 100% 100%, 0% 100%);
         }
@@ -141,7 +142,7 @@ const Banner = () => {
         }
         .animate-float { animation: float 6s ease-in-out infinite; }
         .animate-bounce-slow { animation: bounce-slow 4s ease-in-out infinite; }
-      `}</style>
+      `}</style> */}
     </section>
   );
 };
