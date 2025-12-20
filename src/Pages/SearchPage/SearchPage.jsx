@@ -14,7 +14,6 @@ const SearchPage = () => {
 
   const axiosInstance = useAxios();
 
-  // Load location data from public folder
   useEffect(() => {
     axios.get("/district.json").then((res) => setDistricts(res.data));
     axios.get("/upzila.json").then((res) => setUpzilas(res.data));
@@ -22,37 +21,36 @@ const SearchPage = () => {
 
   const filteredUpazilas = upzilas.filter((u) => u.district_id === districtId);
 
- const handleSearch = async (e) => {
-   e.preventDefault();
-   const form = e.target;
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    const form = e.target;
 
-   const bloodGroup = form.bloodGroup.value;
-   // Get the name from the districts array using the ID in state
-   const districtName = districts.find((d) => d.id === districtId)?.name;
-   const upzila = form.upzila.value;
+    const bloodGroup = form.bloodGroup.value;
 
-   const searchParams = {};
-   if (bloodGroup) searchParams.bloodGroup = bloodGroup;
+    const districtName = districts.find((d) => d.id === districtId)?.name;
+    const upzila = form.upzila.value;
 
-   // MATCH THIS KEY TO YOUR BACKEND (district)
-   if (districtName) searchParams.district = districtName;
+    const searchParams = {};
+    if (bloodGroup) searchParams.bloodGroup = bloodGroup;
 
-   if (upzila) searchParams.upzila = upzila;
+    if (districtName) searchParams.district = districtName;
 
-   setLoading(true);
-   setSearchPerformed(true);
+    if (upzila) searchParams.upzila = upzila;
 
-   try {
-     const res = await axiosInstance.get("/search-requests", {
-       params: searchParams,
-     });
-     setFilteredDonors(res.data);
-   } catch (error) {
-     console.error("Search failed:", error);
-   } finally {
-     setLoading(false);
-   }
- };
+    setSearchPerformed(true);
+
+    axiosInstance
+      .get("/search-requests", {
+        params: searchParams,
+      })
+      .then((res) => {
+        setFilteredDonors(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  };
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4">
       <div className="max-w-6xl mx-auto">
@@ -161,8 +159,7 @@ const SearchPage = () => {
           ) : filteredDonors.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredDonors.map((donor) => (
-
-                <DonationCard donor={donor}/>
+                <DonationCard donor={donor} />
                 // <div
                 //   key={donor._id}
                 //   className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow"

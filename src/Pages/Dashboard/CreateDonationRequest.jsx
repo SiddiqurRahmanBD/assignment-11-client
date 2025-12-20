@@ -38,7 +38,7 @@ const CreateDonationRequest = () => {
 
   const handleRequest = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    // setLoading(true);
     const form = e.target;
     const selectedDistrict = districts.find((d) => d.id === districtId);
 
@@ -57,20 +57,20 @@ const CreateDonationRequest = () => {
       donationStatus: "Pending",
     };
 
-    try {
-      const res = await axiosSecure.post("/requests", formdata);
-      if (res.data.insertedId) {
-        toast.success("Blood request posted successfully!");
+    axiosSecure.post("/requests", formdata)
+    .then(res =>{
+      console.log(res.data);
+       toast.success("Blood request posted successfully!");
         form.reset();
-        setDistrictId("");
-        setUpzila("");
-      }
-    } catch (err) {
+      setDistrictId("");
+       setUpzila("");
+    })
+    .catch(err =>{
       console.log(err);
-      toast.error("Failed to post request.");
-    } finally {
-      setLoading(false);
-    }
+       toast.error("Failed to post request.");
+       setLoading(true);
+    })
+
   };
 
   return (
@@ -237,7 +237,7 @@ const CreateDonationRequest = () => {
                     required
                     className="w-full h-14 pl-12 pr-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/10 focus:border-red-500 outline-none transition-all appearance-none cursor-pointer"
                   >
-                    <option value="" disabled selected>
+                    <option autoCorrect="off" value="" disabled selected>
                       Group
                     </option>
                     {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(
@@ -288,7 +288,6 @@ const CreateDonationRequest = () => {
                 <MessageSquare className="absolute left-4 top-4 text-slate-400 group-focus-within:text-red-500 transition-colors w-5 h-5" />
                 <textarea
                   name="requestMessage"
-                  required
                   rows="4"
                   placeholder="Briefly explain the urgency..."
                   className="w-full p-4 pl-12 bg-slate-50 border border-slate-100 rounded-3xl focus:bg-white focus:ring-2 focus:ring-red-500/10 focus:border-red-500 outline-none transition-all resize-none"

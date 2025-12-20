@@ -63,7 +63,9 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   useEffect(() =>{
-    if(!user) return
+    if(!user) {
+      setRoleLoading(false);
+      return}
     axiosInstance.get(`/users/role/${user.email}`)
     .then(res => {
       setRole(res.data.role)

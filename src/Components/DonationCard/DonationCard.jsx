@@ -4,6 +4,7 @@ import { Link } from "react-router";
 
 const DonationCard = ({donor}) => {
   const {
+    _id,
     recipientName,
     districtName,
     upzila,
@@ -68,7 +69,7 @@ const DonationCard = ({donor}) => {
       </div>
 
       <Link
-        // to={`/donation-details/${_id}`}
+        to={`/donation-details/${_id}`}
         className="w-full h-12 bg-slate-900 hover:bg-red-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all group-hover:gap-3"
       >
         View Details <ArrowRight className="w-4 h-4" />
