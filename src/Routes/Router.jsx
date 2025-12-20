@@ -14,12 +14,14 @@ import AllBloodDonationRequest from "../Pages/Dashboard/AllBloodDonationRequest"
 import Profile from "../Pages/Dashboard/Profile";
 import Dashboard from "../Pages/Dashboard/Dashboard";
 import DonationDetails from "../Pages/DonationDetails/DonationDetails";
+import ErrorPage from "../Pages/Error/ErrorPage";
 
 
 const router = createBrowserRouter([
   {
     path: "/",
     Component: MainLayout,
+    errorElement:<ErrorPage></ErrorPage>,
     children: [
       {
         index: true,
