@@ -8,7 +8,7 @@ import LoaderSpinner from "../Components/Shared/LoaderSpinner";
 
 const PrivateRoute = ({ children }) => {
   const { user, loading, roleLoading, userStatus } = useContext(AuthContext);
-  console.log({user, userStatus, roleLoading, loading});
+  // console.log({user, userStatus, roleLoading, loading});
   const location = useLocation();
   if (loading || roleLoading) {
     return <LoaderSpinner/>

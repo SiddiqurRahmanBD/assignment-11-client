@@ -1,266 +1,306 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import Swal from "sweetalert2";
+import axios from "axios";
 import { AuthContext } from "../../Provider/AuthContext";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import {
-  User,
-  Mail,
-  MapPin,
-  Droplet,
-  Edit3,
-  Save,
-  X,
-  Camera,
-} from "lucide-react";
-import { toast } from "react-toastify";
+  IoCloudUploadOutline,
+  IoPersonOutline,
+  IoLocationOutline,
+  IoWaterOutline,
+  IoMailOutline,
+} from "react-icons/io5";
 
 const Profile = () => {
-  const { user } = useContext(AuthContext);
+  const { user, updateUser } = useContext(AuthContext);
   const axiosSecure = useAxiosSecure();
 
-  const [profile, setProfile] = useState({});
-  const [isEdit, setIsEdit] = useState(false);
+  const [isEditable, setIsEditable] = useState(false);
+  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [districts, setDistricts] = useState([]);
+  const [upazilas, setUpazilas] = useState([]);
+  const [selectedDistrictId, setSelectedDistrictId] = useState("");
+
+  // State for immediate image preview
+  const [previewImage, setPreviewImage] = useState(null);
 
   useEffect(() => {
-    if (!user?.email) return;
-    axiosSecure.get("/user/profile").then((res) => {
-      setProfile(res.data);
-    });
-  }, [axiosSecure, user?.email]);
+    axios.get("/district.json").then((res) => setDistricts(res.data));
+    axios.get("/upzila.json").then((res) => setUpazilas(res.data));
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProfile((prev) => ({ ...prev, [name]: value }));
+    axiosSecure
+      .get("/user/profile")
+      .then((res) => setUserData(res.data))
+      .catch((err) => console.error("Error fetching profile:", err));
+  }, [axiosSecure]);
+
+  useEffect(() => {
+    if (userData && districts.length > 0) {
+      const d = districts.find((dist) => dist.name === userData.district);
+      if (d) setSelectedDistrictId(d.id);
+    }
+  }, [userData, districts]);
+
+  const filteredUpazilas = upazilas.filter(
+    (u) => u.district_id === selectedDistrictId
+  );
+
+  // Handle Image Selection Preview
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setPreviewImage(URL.createObjectURL(file));
+    }
   };
 
-  const handleUpdate = async () => {
+  const handleUpdateProfile = async (e) => {
+    e.preventDefault();
     setLoading(true);
+    const form = e.target;
+
+    // FIX: Safely access photo files only if the input exists in the DOM
+    const imageFile = form.photo?.files ? form.photo.files[0] : null;
+
     try {
-      await axiosSecure.put("/user/profile", profile);
-      toast.success("Profile updated successfully!");
-      setIsEdit(false);
-    } catch (err) {
-      toast.error("Failed to update profile.");
+      let finalPhotoURL = userData?.photoURL;
+      if (imageFile) {
+        const imgData = new FormData();
+        imgData.append("image", imageFile);
+        const imgRes = await axios.post(
+          `https://api.imgbb.com/1/upload?key=80872c72797ec82a69fc4e1b1174a045`,
+          imgData
+        );
+        finalPhotoURL = imgRes.data.data.display_url;
+      }
+
+      const updatedInfo = {
+        name: form.name.value,
+        district: districts.find((d) => d.id === selectedDistrictId)?.name,
+        upzila: form.upzila.value,
+        bloodGroup: form.bloodGroup.value,
+        photoURL: finalPhotoURL,
+      };
+
+      const res = await axiosSecure.patch(
+        `/profile-update/${user?.email}`,
+        updatedInfo
+      );
+
+      if (res.data.modifiedCount > 0 || res.data.matchedCount > 0) {
+        await updateUser({
+          displayName: updatedInfo.name,
+          photoURL: finalPhotoURL,
+        });
+        Swal.fire({
+          icon: "success",
+          title: "Profile Updated",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        setUserData({ ...userData, ...updatedInfo });
+        setIsEditable(false);
+        setPreviewImage(null); // Reset preview after save
+      }
+    } catch (error) {
+      console.error(error);
+      Swal.fire("Error", "Update failed", "error");
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <div className="min-h-screen bg-[#FDFEFF] py-12 px-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-          <div>
-            <h2 className="text-4xl font-black text-slate-900 tracking-tight">
-              My Profile
-            </h2>
-            <p className="text-slate-500 mt-2 font-medium">
-              Manage your donor information and preferences.
-            </p>
-          </div>
+  if (!userData || districts.length === 0) {
+    return (
+      <div className="flex flex-col justify-center items-center min-h-[60vh] space-y-4">
+        <span className="loading loading-infinity loading-lg text-red-600"></span>
+        <p className="text-gray-500 font-medium animate-pulse">
+          Loading your life-saving profile...
+        </p>
+      </div>
+    );
+  }
 
-          <div className="flex gap-3">
-            {!isEdit ? (
-              <button
-                onClick={() => setIsEdit(true)}
-                className="btn border-none bg-red-50 text-red-600 hover:bg-red-100 px-6 rounded-2xl font-bold flex items-center gap-2 transition-all"
-              >
-                <Edit3 size={18} /> Edit Profile
-              </button>
-            ) : (
-              <>
-                <button
-                  onClick={() => setIsEdit(false)}
-                  className="btn border-none bg-slate-100 text-slate-600 hover:bg-slate-200 px-6 rounded-2xl font-bold flex items-center gap-2"
-                >
-                  <X size={18} /> Cancel
-                </button>
-                <button
-                  onClick={handleUpdate}
-                  disabled={loading}
-                  className="btn border-none bg-red-600 text-white hover:bg-red-700 px-8 rounded-2xl font-bold flex items-center gap-2 shadow-lg shadow-red-200"
-                >
-                  {loading ? (
-                    <span className="loading loading-spinner"></span>
-                  ) : (
-                    <>
-                      <Save size={18} /> Save Changes
-                    </>
-                  )}
-                </button>
-              </>
-            )}
+  return (
+    <div className="max-w-4xl mx-auto my-12 px-4">
+      <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
+        {/* Header Background */}
+        <div className="h-32 bg-gradient-to-r from-red-500 to-rose-600 relative">
+          <div className="absolute -bottom-12 left-8">
+            <div className="relative group">
+              <img
+                src={previewImage || userData?.photoURL || user?.photoURL}
+                alt="Profile"
+                className="w-32 h-32 rounded-2xl border-4 border-white object-cover shadow-lg bg-white"
+              />
+              {isEditable && (
+                <label className="absolute inset-0 bg-black/40 rounded-2xl flex items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity">
+                  <IoCloudUploadOutline className="text-white text-3xl" />
+                  <input
+                    type="file"
+                    name="photo"
+                    className="hidden"
+                    onChange={handleImageChange}
+                  />
+                </label>
+              )}
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column: Avatar Card */}
-          <div className="lg:col-span-1">
-            <div className="bg-white border border-slate-100 rounded-[2.5rem] p-8 shadow-xl shadow-slate-200/50 flex flex-col items-center text-center">
-              <div className="relative group">
-                <img
-                  src={profile?.photoURL || user?.photoURL}
-                  alt="Avatar"
-                  className="w-32 h-32 rounded-[2rem] object-cover ring-4 ring-red-50 shadow-lg"
-                />
-                {isEdit && (
-                  <div className="absolute inset-0 bg-black/40 rounded-[2rem] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                    <Camera className="text-white" />
-                  </div>
-                )}
-              </div>
-              <h3 className="mt-6 text-xl font-bold text-slate-800">
-                {profile?.name || "Life Saver"}
-              </h3>
-              <p className="text-red-600 font-bold text-sm bg-red-50 px-4 py-1 rounded-full mt-2">
-                {profile?.bloodGroup || "O+"} Donor
+        <div className="pt-16 pb-8 px-8">
+          <div className="flex justify-between items-start mb-10">
+            <div>
+              <h2 className="text-3xl font-extrabold text-gray-800">
+                {userData.name}
+              </h2>
+              <p className="text-red-600 font-medium flex items-center gap-1">
+                <IoWaterOutline /> Blood Donor Member
               </p>
-              <div className="w-full border-t border-slate-50 mt-6 pt-6 space-y-3">
-                <div className="flex items-center gap-3 text-slate-500 text-sm justify-center">
-                  <ShieldCheck size={16} className="text-green-500" /> Verified
-                  Donor
-                </div>
-              </div>
             </div>
+            {!isEditable ? (
+              <button
+                onClick={() => setIsEditable(true)}
+                className="px-6 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition-all shadow-sm"
+              >
+                Edit Profile
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  setIsEditable(false);
+                  setPreviewImage(null);
+                }}
+                className="px-6 py-2 bg-gray-100 text-gray-500 rounded-xl font-semibold transition-all"
+              >
+                Cancel
+              </button>
+            )}
           </div>
 
-          {/* Right Column: Form Fields */}
-          <div className="lg:col-span-2">
-            <div className="bg-white/80 backdrop-blur-xl border border-slate-100 rounded-[2.5rem] p-8 md:p-10 shadow-xl shadow-slate-200/50">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Full Name */}
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 ml-1">
-                    Full Name
-                  </label>
-                  <div className="relative group">
-                    <User
-                      className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${
-                        isEdit ? "text-red-500" : "text-slate-400"
-                      }`}
-                    />
-                    <input
-                      name="name"
-                      value={profile?.name || ""}
-                      onChange={handleChange}
-                      disabled={!isEdit}
-                      className="w-full h-14 pl-12 pr-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all disabled:opacity-70"
-                    />
-                  </div>
-                </div>
+          <form onSubmit={handleUpdateProfile} className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+              {/* Full Name */}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-400 flex items-center gap-2 uppercase tracking-wider">
+                  <IoPersonOutline className="text-red-500" /> Full Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  defaultValue={userData.name}
+                  disabled={!isEditable}
+                  className={`w-full px-4 py-3 rounded-xl border-2 transition-all outline-none font-medium ${
+                    isEditable
+                      ? "border-red-100 focus:border-red-500 bg-white"
+                      : "border-transparent bg-gray-50 text-gray-700"
+                  }`}
+                />
+              </div>
 
-                {/* Email (Locked) */}
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-400 ml-1">
-                    Email (Account ID)
-                  </label>
-                  <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5" />
-                    <input
-                      value={profile?.email || user?.email || ""}
-                      disabled
-                      className="w-full h-14 pl-12 pr-4 bg-slate-100 border border-slate-200 rounded-2xl text-slate-400 cursor-not-allowed outline-none"
-                    />
-                  </div>
-                </div>
+              {/* Email */}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-400 flex items-center gap-2 uppercase tracking-wider">
+                  <IoMailOutline className="text-red-500" /> Email Address
+                </label>
+                <input
+                  type="email"
+                  value={userData.email}
+                  disabled
+                  className="w-full px-4 py-3 rounded-xl border-2 border-transparent bg-gray-50 text-gray-400 cursor-not-allowed font-medium"
+                />
+              </div>
 
-                {/* District */}
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 ml-1">
-                    District
-                  </label>
-                  <div className="relative group">
-                    <MapPin
-                      className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${
-                        isEdit ? "text-red-500" : "text-slate-400"
-                      }`}
-                    />
-                    <input
-                      name="district"
-                      value={profile?.district || ""}
-                      onChange={handleChange}
-                      disabled={!isEdit}
-                      className="w-full h-14 pl-12 pr-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all disabled:opacity-70"
-                    />
-                  </div>
-                </div>
+              {/* District */}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-400 flex items-center gap-2 uppercase tracking-wider">
+                  <IoLocationOutline className="text-red-500" /> District
+                </label>
+                <select
+                  disabled={!isEditable}
+                  value={selectedDistrictId}
+                  onChange={(e) => setSelectedDistrictId(e.target.value)}
+                  className={`w-full px-4 py-3 rounded-xl border-2 transition-all outline-none appearance-none font-medium ${
+                    isEditable
+                      ? "border-red-100 focus:border-red-500 bg-white"
+                      : "border-transparent bg-gray-50 text-gray-700"
+                  }`}
+                >
+                  <option value="">Select District</option>
+                  {districts.map((d) => (
+                    <option key={d.id} value={d.id}>
+                      {d.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-                {/* Upazila */}
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 ml-1">
-                    Upazila
-                  </label>
-                  <div className="relative group">
-                    <MapPin
-                      className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${
-                        isEdit ? "text-red-500" : "text-slate-400"
-                      }`}
-                    />
-                    <input
-                      name="upzila"
-                      value={profile?.upzila || ""}
-                      onChange={handleChange}
-                      disabled={!isEdit}
-                      className="w-full h-14 pl-12 pr-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all disabled:opacity-70"
-                    />
-                  </div>
-                </div>
+              {/* Upazila */}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-400 flex items-center gap-2 uppercase tracking-wider">
+                  <IoLocationOutline className="text-red-500" /> Upazila
+                </label>
+                <select
+                  disabled={!isEditable || !selectedDistrictId}
+                  name="upzila"
+                  defaultValue={userData.upzila}
+                  className={`w-full px-4 py-3 rounded-xl border-2 transition-all outline-none appearance-none font-medium ${
+                    isEditable
+                      ? "border-red-100 focus:border-red-500 bg-white"
+                      : "border-transparent bg-gray-50 text-gray-700"
+                  }`}
+                >
+                  <option value="">Select Upazila</option>
+                  {filteredUpazilas.map((u) => (
+                    <option key={u.id} value={u.name}>
+                      {u.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-                {/* Blood Group Select */}
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 ml-1">
-                    Blood Group
-                  </label>
-                  <div className="relative">
-                    <Droplet
-                      className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 z-10 ${
-                        isEdit ? "text-red-500" : "text-slate-400"
-                      }`}
-                    />
-                    <select
-                      name="bloodGroup"
-                      value={profile?.bloodGroup || ""}
-                      onChange={handleChange}
-                      disabled={!isEdit}
-                      className="w-full h-14 pl-12 pr-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all appearance-none disabled:opacity-70"
-                    >
-                      <option value="">Select Group</option>
-                      {["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"].map(
-                        (g) => (
-                          <option key={g} value={g}>
-                            {g}
-                          </option>
-                        )
-                      )}
-                    </select>
-                  </div>
-                </div>
+              {/* Blood Group */}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-400 flex items-center gap-2 uppercase tracking-wider">
+                  <IoWaterOutline className="text-red-500" /> Blood Group
+                </label>
+                <select
+                  disabled={!isEditable}
+                  name="bloodGroup"
+                  defaultValue={userData.bloodGroup}
+                  className={`w-full px-4 py-3 rounded-xl border-2 transition-all outline-none appearance-none font-extrabold text-red-600 ${
+                    isEditable
+                      ? "border-red-100 focus:border-red-500 bg-white"
+                      : "border-transparent bg-gray-50"
+                  }`}
+                >
+                  {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(
+                    (bg) => (
+                      <option key={bg} value={bg}>
+                        {bg}
+                      </option>
+                    )
+                  )}
+                </select>
               </div>
             </div>
-          </div>
+
+            {isEditable && (
+              <div className="pt-6">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full md:w-max px-12 bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-2xl shadow-lg shadow-red-100 transition-all active:scale-95 disabled:opacity-50"
+                >
+                  {loading ? "Saving Changes..." : "Update Profile"}
+                </button>
+              </div>
+            )}
+          </form>
         </div>
       </div>
     </div>
   );
 };
-
-// Helper internal icon for verification
-const ShieldCheck = ({ size, className }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-    <path d="m9 12 2 2 4-4" />
-  </svg>
-);
 
 export default Profile;
