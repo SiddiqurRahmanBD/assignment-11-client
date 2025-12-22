@@ -15,13 +15,15 @@ import Profile from "../Pages/Dashboard/Profile";
 import Dashboard from "../Pages/Dashboard/Dashboard";
 import DonationDetails from "../Pages/DonationDetails/DonationDetails";
 import ErrorPage from "../Pages/Error/ErrorPage";
+import FundingPage from "../Pages/FundingPage/FundingPage";
+import PaymentSuccess from "../Pages/PaymentSuccess/PaymentSuccess";
 
 
 const router = createBrowserRouter([
   {
     path: "/",
     Component: MainLayout,
-    errorElement:<ErrorPage></ErrorPage>,
+    errorElement: <ErrorPage></ErrorPage>,
     children: [
       {
         index: true,
@@ -36,6 +38,14 @@ const router = createBrowserRouter([
         Component: DonationRequests,
       },
       {
+        path: "fundig-page",
+        Component: FundingPage,
+      },
+      {
+        path: "payment-success",
+        Component: PaymentSuccess,
+      },
+      {
         path: "auth/login",
         Component: Login,
       },
@@ -47,7 +57,7 @@ const router = createBrowserRouter([
         path: "donation-details/:id",
         element: (
           <PrivateRoute>
-          <DonationDetails/>
+            <DonationDetails />
           </PrivateRoute>
         ),
       },

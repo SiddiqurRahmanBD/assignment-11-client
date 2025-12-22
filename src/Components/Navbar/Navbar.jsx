@@ -10,7 +10,7 @@ import {
   LogOut,
   Menu,
 } from "lucide-react";
-import { BiDonateBlood } from "react-icons/bi";
+import { BiDonateBlood, BiMoney } from "react-icons/bi";
 import { AuthContext } from "../../Provider/AuthContext";
 
 const Navbar = () => {
@@ -70,21 +70,22 @@ const Navbar = () => {
           <BiDonateBlood size={20} /> Requests
         </NavLink>
       </li>
-      {/* Changed 'Available Foods' to 'Donation Camps' for consistency */}
-      {/* <li>
-        <NavLink
-          to="/donation-camps"
-          className={({ isActive }) =>
-            `flex items-center gap-2 font-bold px-4 py-2 rounded-xl transition-all ${
-              isActive
-                ? "bg-red-50 text-red-600 shadow-sm"
-                : "hover:bg-red-50 hover:text-red-600"
-            }`
-          }
-        >
-          <Heart size={18} /> Camps
-        </NavLink>
-      </li> */}
+      <li>
+        {user && (
+          <NavLink
+            to="/fundig-page"
+            className={({ isActive }) =>
+              `flex items-center gap-2 font-bold px-4 py-2 rounded-xl transition-all ${
+                isActive
+                  ? "bg-red-50 text-red-600 shadow-sm"
+                  : "hover:bg-red-50 hover:text-red-600"
+              }`
+            }
+          >
+            <BiMoney size={20} /> Funding
+          </NavLink>
+        )}
+      </li>
     </>
   );
 
