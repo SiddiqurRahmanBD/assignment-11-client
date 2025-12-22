@@ -100,7 +100,7 @@ const Profile = () => {
         });
         setUserData({ ...userData, ...updatedInfo });
         setIsEditable(false);
-        setPreviewImage(null); // Reset preview after save
+        setPreviewImage(null);
       }
     } catch (error) {
       console.error(error);
@@ -124,7 +124,6 @@ const Profile = () => {
   return (
     <div className="max-w-4xl mx-auto my-12 px-4">
       <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
-        {/* Header Background */}
         <div className="h-32 bg-gradient-to-r from-red-500 to-rose-600 relative">
           <div className="absolute -bottom-12 left-8">
             <div className="relative group">
@@ -180,7 +179,6 @@ const Profile = () => {
 
           <form onSubmit={handleUpdateProfile} className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
-              {/* Full Name */}
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-400 flex items-center gap-2 uppercase tracking-wider">
                   <IoPersonOutline className="text-red-500" /> Full Name
@@ -197,8 +195,6 @@ const Profile = () => {
                   }`}
                 />
               </div>
-
-              {/* Email */}
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-400 flex items-center gap-2 uppercase tracking-wider">
                   <IoMailOutline className="text-red-500" /> Email Address
@@ -210,8 +206,6 @@ const Profile = () => {
                   className="w-full px-4 py-3 rounded-xl border-2 border-transparent bg-gray-50 text-gray-400 cursor-not-allowed font-medium"
                 />
               </div>
-
-              {/* District */}
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-400 flex items-center gap-2 uppercase tracking-wider">
                   <IoLocationOutline className="text-red-500" /> District
@@ -234,8 +228,6 @@ const Profile = () => {
                   ))}
                 </select>
               </div>
-
-              {/* Upazila */}
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-400 flex items-center gap-2 uppercase tracking-wider">
                   <IoLocationOutline className="text-red-500" /> Upazila

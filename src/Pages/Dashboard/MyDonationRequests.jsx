@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 const MyDonationRequests = () => {
   const [requests, setRequests] = useState([]);
@@ -11,7 +11,6 @@ const MyDonationRequests = () => {
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
 
-  // Fetch Data
   const fetchRequests = () => {
     axiosSecure
       .get(`/my-requests?page=${currentPage - 1}&size=${itemsPerPage}`)
@@ -25,7 +24,6 @@ const MyDonationRequests = () => {
     fetchRequests();
   }, [currentPage, itemsPerPage]);
 
-  // Handlers
   const handleStatusUpdate = async (id, status) => {
     const res = await axiosSecure.patch(`/donation-request/${id}`, { status });
     if (res.data.modifiedCount > 0) {
@@ -53,7 +51,6 @@ const MyDonationRequests = () => {
     });
   };
 
-  // Pagination Logic
   const totalPages = Math.ceil(totalRequests / itemsPerPage);
   const pages = [...Array(totalPages).keys()].map((i) => i + 1);
 
@@ -131,13 +128,14 @@ const MyDonationRequests = () => {
                   )}
                 </td>
                 <td className="flex justify-center gap-1">
-                  <button
+                  <Link
+                    to={`/donation-details/${request?._id}`}
                     onClick={() => navigate(`/donation-request/${request._id}`)}
                     className="btn btn-square btn-ghost btn-xs tooltip"
                     data-tip="View"
                   >
                     👁️
-                  </button>
+                  </Link>
                   <button
                     onClick={() =>
                       navigate(`/dashboard/edit-request/${request._id}`)
@@ -178,7 +176,6 @@ const MyDonationRequests = () => {
         </table>
       </div>
 
-      {/* Pagination Controls */}
       <div className="flex justify-center items-center mt-8 gap-2">
         <button
           disabled={currentPage === 1}

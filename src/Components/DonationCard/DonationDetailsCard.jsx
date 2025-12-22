@@ -124,8 +124,6 @@ const DonationDetailsCard = ({ details }) => {
           )}
         </div>
       </div>
-
-      {/* Modern Modal Overlay */}
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
@@ -157,7 +155,7 @@ const DonationDetailsCard = ({ details }) => {
                 onClick={handleConfirmDonation}
                 className="w-full bg-red-600 text-white font-bold py-4 rounded-xl hover:bg-red-700 transition-colors"
               >
-                Confirm Commitment
+                Confirm
               </button>
               <button
                 onClick={() => setOpen(false)}

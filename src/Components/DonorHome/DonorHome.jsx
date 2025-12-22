@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { AuthContext } from "../../Provider/AuthContext";
 import Swal from "sweetalert2";
@@ -50,12 +50,11 @@ const DonorHome = () => {
 
   return (
     <div className="space-y-8 p-4 md:p-8">
-      {/* Welcome & Stats Section */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gradient-to-r from-red-50 to-white p-8 rounded-2xl border border-red-100">
         <div>
           <h2 className="text-3xl font-extrabold text-gray-800">
             Welcome back,{" "}
-            <span className="text-red-600">{user?.displayName}</span>! 👋
+            <span className="text-red-600">{user?.displayName}</span>!
           </h2>
           <p className="text-gray-500 mt-1">
             Here is a quick look at your recent activity.
@@ -151,14 +150,15 @@ const DonorHome = () => {
                           className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40 border border-gray-100"
                         >
                           <li>
-                            <button
+                            <Link
+                              to={`/donation-details/${req?._id}`}
                               onClick={() =>
                                 navigate(`/donation-request/${req._id}`)
                               }
                               className="text-xs"
                             >
                               View Details
-                            </button>
+                            </Link>
                           </li>
                           <li>
                             <button
