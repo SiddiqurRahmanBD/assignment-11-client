@@ -92,7 +92,6 @@ const Navbar = () => {
   return (
     <div className="sticky top-0 z-[1000] w-full bg-white/70 backdrop-blur-lg border-b border-red-50 shadow-sm">
       <div className="navbar max-w-7xl mx-auto py-3">
-        {/* Navbar Start */}
         <div className="navbar-start">
           <div className="dropdown">
             <div
@@ -125,12 +124,10 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Navbar Center (Desktop) */}
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal gap-2">{navLinks}</ul>
         </div>
-
-        {/* Navbar End */}
+        
         <div className="navbar-end gap-3">
           {user ? (
             <div className="dropdown dropdown-end">

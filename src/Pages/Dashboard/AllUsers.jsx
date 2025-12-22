@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { HiDotsVertical } from "react-icons/hi";
 import {
@@ -11,6 +11,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { toast } from "react-toastify";
+import { AuthContext } from "../../Provider/AuthContext";
 
 const AllUsers = () => {
   const [users, setUsers] = useState([]);
@@ -86,7 +87,6 @@ const AllUsers = () => {
           </div>
         </div>
 
-        {/* Table Container */}
         <div className="bg-white border border-slate-100 rounded-[2.5rem] shadow-xl shadow-slate-200/40 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="table w-full border-separate border-spacing-y-0">
@@ -186,7 +186,6 @@ const AllUsers = () => {
                             Quick Actions
                           </p>
 
-                          {/* Block Logic */}
                           <li>
                             {user?.status === "Active" ? (
                               <button
@@ -209,7 +208,6 @@ const AllUsers = () => {
                             )}
                           </li>
 
-                          {/* Role Logic */}
                           <div className="h-px bg-slate-50 my-2" />
                           <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest px-4 py-2">
                             Change Role
@@ -235,17 +233,6 @@ const AllUsers = () => {
                                 className="hover:bg-slate-100 text-slate-600 rounded-xl font-bold"
                               >
                                 <UserCog size={16} /> Demote to Donor
-                              </button>
-                            </li>
-                          )}
-
-                          {user?.role !== "Admin" && (
-                            <li>
-                              <button
-                                onClick={() => handleRole(user.email, "Admin")}
-                                className="hover:bg-purple-50 text-purple-600 rounded-xl font-bold"
-                              >
-                                <ShieldCheck size={16} /> Make Admin
                               </button>
                             </li>
                           )}

@@ -14,7 +14,7 @@ const PrivateRoute = ({ children }) => {
     return <LoaderSpinner/>
   }
  
-  if (!user  || !userStatus === "Active"  ) {
+  if (!user  || userStatus === "Blocked"  ) {
     return <Navigate state={location.pathname} to="/auth/login"></Navigate>;
   }
   return children;

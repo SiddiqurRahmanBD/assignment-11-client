@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
+import { AuthContext } from "../../Provider/AuthContext";
 
 const MyDonationRequests = () => {
   const [requests, setRequests] = useState([]);
@@ -10,8 +11,8 @@ const MyDonationRequests = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
+  const { role } = useContext(AuthContext);
 
-  // Fetch Data
   const fetchRequests = () => {
     axiosSecure
       .get(`/all-requests?page=${currentPage - 1}&size=${itemsPerPage}`)
@@ -25,7 +26,6 @@ const MyDonationRequests = () => {
     fetchRequests();
   }, [currentPage, itemsPerPage]);
 
-  // Handlers
   const handleStatusUpdate = async (id, status) => {
     const res = await axiosSecure.patch(`/donation-request/${id}`, { status });
     if (res.data.modifiedCount > 0) {
@@ -53,7 +53,6 @@ const MyDonationRequests = () => {
     });
   };
 
-  // Pagination Logic
   const totalPages = Math.ceil(totalRequests / itemsPerPage);
   const pages = [...Array(totalPages).keys()].map((i) => i + 1);
 
@@ -61,7 +60,7 @@ const MyDonationRequests = () => {
     <div className="p-6 bg-base-100 rounded-xl shadow-sm border border-base-200">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800">
-          My Donation Requests
+          All Donation Requests
         </h2>
         <div className="badge badge-primary p-4 gap-2">
           Total: {totalRequests}
@@ -79,7 +78,10 @@ const MyDonationRequests = () => {
               <th>Blood</th>
               <th>Status</th>
               <th>Donor</th>
-              <th className="text-center">Actions</th>
+              {
+                role ==="Admin" && <th className="text-center">Actions</th>
+              }
+              
             </tr>
           </thead>
           <tbody>
@@ -130,7 +132,8 @@ const MyDonationRequests = () => {
                     "---"
                   )}
                 </td>
-                <td className="flex justify-center gap-1">
+                {
+                  role === "Admin" &&  <td className="flex justify-center gap-1">
                   <button
                     onClick={() => navigate(`/donation-request/${request._id}`)}
                     className="btn btn-square btn-ghost btn-xs tooltip"
@@ -172,13 +175,15 @@ const MyDonationRequests = () => {
                     </div>
                   )}
                 </td>
+                }
+
+               
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {/* Pagination Controls */}
       <div className="flex justify-center items-center mt-8 gap-2">
         <button
           disabled={currentPage === 1}

@@ -4,7 +4,6 @@ const ContactUs = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-16 px-4">
       <div className="max-w-6xl mx-auto">
-        {/* Header Section */}
         <div className="text-center mb-16">
           <span className="px-4 py-1.5 rounded-full bg-red-100 text-red-600 font-semibold text-sm uppercase tracking-wider">
             Get in Touch
@@ -19,9 +18,7 @@ const ContactUs = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-          {/* Left Side: Contact Cards (4 Cols) */}
           <div className="lg:col-span-5 space-y-6">
-            {/* Emergency Call Card */}
             <div className="group p-8 bg-white rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl hover:border-red-200 transition-all duration-300">
               <div className="flex items-center gap-6">
                 <div className="w-14 h-14 rounded-2xl bg-red-600 flex items-center justify-center text-white shadow-lg shadow-red-200 group-hover:scale-110 transition-transform">
@@ -55,7 +52,6 @@ const ContactUs = () => {
               </div>
             </div>
 
-            {/* Email Card */}
             <div className="group p-8 bg-white rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl hover:border-red-200 transition-all duration-300">
               <div className="flex items-center gap-6">
                 <div className="w-14 h-14 rounded-2xl bg-slate-800 flex items-center justify-center text-white shadow-lg shadow-slate-200 group-hover:scale-110 transition-transform">
@@ -80,13 +76,11 @@ const ContactUs = () => {
                     Support Email
                   </p>
                   <p className="text-xl font-bold text-slate-800">
-                    help@bloodhero.org
+                    help@savelif.org
                   </p>
                 </div>
               </div>
             </div>
-
-            {/* Location Card */}
             <div className="group p-8 bg-white rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl hover:border-red-200 transition-all duration-300">
               <div className="flex items-center gap-6">
                 <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center text-red-600 group-hover:scale-110 transition-transform">
@@ -123,12 +117,9 @@ const ContactUs = () => {
             </div>
           </div>
 
-          {/* Right Side: Modern Form (7 Cols) */}
           <div className="lg:col-span-7">
             <div className="bg-white rounded-[2rem] shadow-2xl shadow-red-100/50 p-8 md:p-12 border border-slate-50 relative overflow-hidden">
-              {/* Decorative Circle */}
               <div className="absolute -top-10 -right-10 w-32 h-32 bg-red-50 rounded-full blur-3xl"></div>
-
               <form className="relative z-10 space-y-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="form-control">
@@ -139,7 +130,7 @@ const ContactUs = () => {
                     </label>
                     <input
                       type="text"
-                      placeholder="John Doe"
+                      placeholder="Enter your name"
                       className="input input-bordered bg-slate-50 border-none focus:ring-2 focus:ring-red-500 rounded-2xl h-14"
                       required
                     />
@@ -152,7 +143,7 @@ const ContactUs = () => {
                     </label>
                     <input
                       type="email"
-                      placeholder="john@example.com"
+                      placeholder="email@example.com"
                       className="input input-bordered bg-slate-50 border-none focus:ring-2 focus:ring-red-500 rounded-2xl h-14"
                       required
                     />
