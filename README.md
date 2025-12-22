@@ -10,18 +10,18 @@ https://save-life-101.netlify.app
 Save life is a Public Welfire based Website. In this website, People can easily Donate Blood and take Blood for any kind of Patients who need blood. The main purpose of this website Makes People happy and Stands by them.
 
 ## NPM Package Names:
-@tailwindcss/vite
-axios
-daisyui
-firebase
-lucide-react
-react
-react-dom
-react-icons
-react-router
-react-spinners
-react-toastify
-sweetalert2
+@tailwindcss/vite, 
+axios,
+daisyui,
+firebase,
+lucide-react,
+react,
+react-dom,
+react-icons,
+react-router,
+react-spinners,
+react-toastify,
+sweetalert2,
 tailwindcss
 
 ## Key Features:
