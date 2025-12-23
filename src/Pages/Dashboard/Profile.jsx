@@ -33,7 +33,6 @@ const Profile = () => {
     bloodGroup: "",
   });
 
-  // ================= FETCH DATA =================
   useEffect(() => {
     axios.get("/district.json").then((res) => setDistricts(res.data));
     axios.get("/upzila.json").then((res) => setUpazilas(res.data));
@@ -43,7 +42,6 @@ const Profile = () => {
     });
   }, [axiosSecure]);
 
-  // ================= SYNC FORM =================
   useEffect(() => {
     if (userData) {
       setFormData({
@@ -136,7 +134,6 @@ const Profile = () => {
   return (
     <div className="max-w-2xl mx-auto my-12 px-4">
       <div className="bg-base-100 rounded-3xl shadow-2xl overflow-hidden border border-base-200">
-        {/* ================= HEADER BORDER/COVER ================= */}
         <div className="h-40 bg-gradient-to-br from-rose-500 via-red-600 to-red-700 relative">
           <div className="absolute -bottom-16 left-1/2 -translate-x-1/2">
             <div className="relative group">
@@ -165,8 +162,6 @@ const Profile = () => {
             </div>
           </div>
         </div>
-
-        {/* ================= CONTENT ================= */}
         <div className="pt-20 px-8 pb-10">
           <div className="text-center mb-10">
             <h2 className="text-2xl font-black text-gray-800 tracking-tight">
@@ -199,7 +194,6 @@ const Profile = () => {
           </div>
 
           <form onSubmit={handleUpdateProfile} className="space-y-5">
-            {/* Input Wrapper Component-style */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="form-control">
                 <label className="label py-1">

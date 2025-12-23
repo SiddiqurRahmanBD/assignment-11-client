@@ -16,7 +16,6 @@ const ManagementHome = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        // You can create a single 'admin-stats' endpoint or call them separately
         const res = await axiosSecure.get("/admin-stats");
         setStats(res.data);
       } catch (error) {

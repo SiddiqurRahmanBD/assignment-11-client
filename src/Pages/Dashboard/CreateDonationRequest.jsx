@@ -76,7 +76,6 @@ const CreateDonationRequest = () => {
   return (
     <div className="py-6">
       <div className="max-w-4xl mx-auto">
-        {/* Header Section */}
         <div className="mb-10 text-center md:text-left">
           <h2 className="text-4xl font-black text-slate-900 tracking-tight">
             Create Request
@@ -87,7 +86,6 @@ const CreateDonationRequest = () => {
         </div>
 
         <form onSubmit={handleRequest} className="space-y-8">
-          {/* Section 1: Identity (Read Only) */}
           <div className="bg-white/70 backdrop-blur-xl border border-slate-100 rounded-[2.5rem] p-8 shadow-xl shadow-slate-200/40">
             <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2">
               <User size={16} /> Requester Information
@@ -124,7 +122,6 @@ const CreateDonationRequest = () => {
             </div>
           </div>
 
-          {/* Section 2: Patient & Location Info */}
           <div className="bg-white border border-slate-100 rounded-[2.5rem] p-8 shadow-xl shadow-slate-200/40">
             <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2">
               <Hospital size={16} /> Patient & Hospital Details
@@ -168,7 +165,7 @@ const CreateDonationRequest = () => {
 
               <div className="space-y-2">
                 <label className="text-sm font-bold text-slate-700 ml-1">
-                  Upazila
+                  Upzila
                 </label>
                 <select
                   value={upzila}
@@ -178,7 +175,7 @@ const CreateDonationRequest = () => {
                   className="w-full h-14 px-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/10 focus:border-red-500 outline-none transition-all appearance-none cursor-pointer disabled:opacity-50"
                 >
                   <option value="" disabled>
-                    Select Upazila
+                    Select Upzila
                   </option>
                   {filteredUpazilas.map((u) => (
                     <option key={u.id} value={u.name}>
@@ -197,7 +194,7 @@ const CreateDonationRequest = () => {
                   <input
                     name="hospitalName"
                     required
-                    placeholder="e.g. Dhaka Medical College Hospital"
+                    placeholder="Enter Hospital Name"
                     className="w-full h-14 pl-12 pr-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/10 focus:border-red-500 outline-none transition-all"
                   />
                 </div>
@@ -212,7 +209,7 @@ const CreateDonationRequest = () => {
                   <input
                     name="addressLine"
                     required
-                    placeholder="Floor, Ward, Zahir Raihan Rd, etc."
+                    placeholder="Enter Your Full Address"
                     className="w-full h-14 pl-12 pr-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/10 focus:border-red-500 outline-none transition-all"
                   />
                 </div>

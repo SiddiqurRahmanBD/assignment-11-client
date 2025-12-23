@@ -125,7 +125,7 @@ const DashboardLayout = () => {
               <>
                 <NavLink to="/dashboard/all-users" className={navLinkStyles}>
                   <Users size={20} />
-                  <span> All User</span>
+                  <span> All Users</span>
                 </NavLink>
                 <NavLink
                   to="/dashboard/all-blood-donation-request"

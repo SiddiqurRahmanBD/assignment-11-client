@@ -78,10 +78,9 @@ const MyDonationRequests = () => {
               <th>Blood</th>
               <th>Status</th>
               <th>Donor</th>
-              {
-                role ==="Admin" && <th className="text-center">Actions</th>
-              }
-              
+              {(role === "Admin" || role === "admin") && (
+                <th className="text-center">Actions</th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -132,52 +131,54 @@ const MyDonationRequests = () => {
                     "---"
                   )}
                 </td>
-                {
-                  role === "Admin" &&  <td className="flex justify-center gap-1">
-                  <button
-                    onClick={() => navigate(`/donation-request/${request._id}`)}
-                    className="btn btn-square btn-ghost btn-xs tooltip"
-                    data-tip="View"
-                  >
-                    👁️
-                  </button>
-                  <button
-                    onClick={() =>
-                      navigate(`/dashboard/edit-request/${request._id}`)
-                    }
-                    className="btn btn-square btn-outline btn-warning btn-xs"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(request._id)}
-                    className="btn btn-square btn-outline btn-error btn-xs"
-                  >
-                    Del
-                  </button>
+                {(role === "Admin" || role === "admin") && (
+                  <td className="flex justify-center gap-1">
+                    <button
+                      onClick={() =>
+                        navigate(`/donation-details/${request._id}`)
+                      }
+                      className="btn btn-square btn-ghost btn-xs tooltip"
+                      data-tip="View"
+                    >
+                      👁️
+                    </button>
+                    <button
+                      onClick={() =>
+                        navigate(`/dashboard/edit-request/${request._id}`)
+                      }
+                      className="btn btn-square btn-outline btn-warning btn-xs"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(request._id)}
+                      className="btn btn-square btn-outline btn-error btn-xs"
+                    >
+                      Del
+                    </button>
 
-                  {request.donationStatus === "inprogress" && (
-                    <div className="join ml-2">
-                      <button
-                        onClick={() => handleStatusUpdate(request._id, "done")}
-                        className="btn btn-xs btn-success text-white join-item"
-                      >
-                        Done
-                      </button>
-                      <button
-                        onClick={() =>
-                          handleStatusUpdate(request._id, "canceled")
-                        }
-                        className="btn btn-xs btn-secondary join-item"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  )}
-                </td>
-                }
-
-               
+                    {request.donationStatus === "inprogress" && (
+                      <div className="join ml-2">
+                        <button
+                          onClick={() =>
+                            handleStatusUpdate(request._id, "done")
+                          }
+                          className="btn btn-xs btn-success text-white join-item"
+                        >
+                          Done
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleStatusUpdate(request._id, "canceled")
+                          }
+                          className="btn btn-xs btn-secondary join-item"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
