@@ -47,10 +47,10 @@ const PaymentSuccess = () => {
             </p>
             <div className="flex flex-col gap-3">
               <Link
-                to="/donation-requests"
+                to="/fundig-page"
                 className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-lg"
               >
-                View Requests
+                View Fundings
               </Link>
               <Link
                 to="/"

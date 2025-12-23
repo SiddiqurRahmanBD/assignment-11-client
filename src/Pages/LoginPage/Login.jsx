@@ -46,7 +46,6 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-[#FDFEFF] flex items-center justify-center py-16 px-4 relative overflow-hidden">
-      {/* Background Blobs */}
       <div className="fixed top-0 right-0 w-[500px] h-[500px] bg-red-50/40 rounded-full blur-3xl -z-10 translate-x-1/2 -translate-y-1/2"></div>
       <div className="fixed bottom-0 left-0 w-[500px] h-[500px] bg-blue-50/40 rounded-full blur-3xl -z-10 -translate-x-1/2 translate-y-1/2"></div>
 
@@ -64,9 +63,7 @@ const Login = () => {
         </div>
 
         <div className="bg-white/80 backdrop-blur-xl border border-slate-100 rounded-[2.5rem] p-8 md:p-10 shadow-2xl shadow-slate-200/40">
-          {/* autoComplete="off" on form to prevent global autofill */}
           <form onSubmit={handleLogin} className="space-y-6" autoComplete="off">
-            {/* Email Input */}
             <div className="space-y-2">
               <label className="text-sm font-bold text-slate-700 ml-1">
                 Email Address
@@ -77,7 +74,6 @@ const Login = () => {
                   type="email"
                   name="email"
                   ref={emailRef}
-                  /* Using "none" or "off" to block browser defaults */
                   autoComplete="off"
                   className="w-full h-14 pl-12 pr-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none transition-all"
                   placeholder="name@example.com"
