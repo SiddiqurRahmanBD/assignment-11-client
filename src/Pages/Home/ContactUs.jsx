@@ -157,6 +157,7 @@ const ContactUs = () => {
                     </span>
                   </label>
                   <select className="select select-bordered bg-slate-50 border-none focus:ring-2 focus:ring-red-500 rounded-2xl h-14">
+                    <option>Select Subject</option>
                     <option>General Inquiry</option>
                     <option>Want to Donate Blood</option>
                     <option>Urgent Blood Request</option>
@@ -172,13 +173,13 @@ const ContactUs = () => {
                   </label>
                   <textarea
                     className="textarea textarea-bordered bg-slate-50 border-none focus:ring-2 focus:ring-red-500 rounded-2xl h-32 py-4"
-                    placeholder="How can we help you save a life?"
+                    placeholder="Enter Your Message"
                   ></textarea>
                 </div>
 
                 <button
                   type="submit"
-                  className="btn btn-error w-full h-14 rounded-2xl text-white font-bold text-lg shadow-lg shadow-red-200 hover:scale-[1.02] active:scale-95 transition-all"
+                  className="btn btn-primary w-full h-14 rounded-2xl text-white font-bold text-lg shadow-lg shadow-red-200 hover:scale-[1.02] active:scale-95 transition-all"
                 >
                   Send Message
                   <svg

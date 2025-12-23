@@ -17,6 +17,7 @@ import DonationDetails from "../Pages/DonationDetails/DonationDetails";
 import ErrorPage from "../Pages/Error/ErrorPage";
 import FundingPage from "../Pages/FundingPage/FundingPage";
 import PaymentSuccess from "../Pages/PaymentSuccess/PaymentSuccess";
+import DonateSuccess from "../Pages/DonateSuccess/DonateSuccess";
 
 
 const router = createBrowserRouter([
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
       {
         path: "payment-success",
         Component: PaymentSuccess,
+      },
+      {
+        path: "donation-confirm",
+        Component: DonateSuccess,
       },
       {
         path: "auth/login",

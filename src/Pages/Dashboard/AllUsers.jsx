@@ -39,6 +39,7 @@ const AllUsers = () => {
       toast.info(`User is now ${status}`);
       fetchUsers();
     } catch (error) {
+      console.log(error);
       toast.error("Status update failed");
     }
   };
@@ -49,6 +50,7 @@ const AllUsers = () => {
       toast.success(`Role updated to ${role}`);
       fetchUsers();
     } catch (error) {
+      console.log(error);
       toast.error("Role update failed");
     }
   };
@@ -59,7 +61,6 @@ const AllUsers = () => {
   return (
     <div className="py-6 animate-in fade-in duration-500">
       <div className="max-w-6xl mx-auto">
-        {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-10">
           <div>
             <h2 className="text-4xl font-black text-slate-900 tracking-tight flex items-center gap-3">
@@ -135,8 +136,7 @@ const AllUsers = () => {
                         </div>
                       </div>
                     </td>
-
-                    <td>
+                     <td>
                       <span
                         className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider ${
                           user?.role === "Admin"

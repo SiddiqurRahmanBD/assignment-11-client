@@ -5,8 +5,8 @@ import { AuthContext } from "../Provider/AuthContext";
 
 // Create instance outside the hook to prevent multiple instances
 const axiosSecure = axios.create({
-  baseURL: "https://assignment-11-server-pi-lac.vercel.app",
-  // baseURL: "http://localhost:3000",
+  // baseURL: "https://assignment-11-server-pi-lac.vercel.app",
+  baseURL: "http://localhost:3000",
 });
 
 const useAxiosSecure = () => {

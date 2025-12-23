@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import { Link, useNavigate } from "react-router";
+import { Delete, Edit, Edit3Icon, View, ViewIcon } from "lucide-react";
 
 const MyDonationRequests = () => {
   const [requests, setRequests] = useState([]);
@@ -75,7 +76,7 @@ const MyDonationRequests = () => {
               <th>Date & Time</th>
               <th>Blood</th>
               <th>Status</th>
-              <th>Donor</th>
+              {/* <th>Donor</th> */}
               <th className="text-center">Actions</th>
             </tr>
           </thead>
@@ -117,7 +118,7 @@ const MyDonationRequests = () => {
                     {request.donationStatus}
                   </span>
                 </td>
-                <td>
+                {/* <td>
                   {request.donationStatus === "inprogress" ? (
                     <div className="text-xs">
                       <p className="font-bold">{request.donorName}</p>
@@ -126,7 +127,7 @@ const MyDonationRequests = () => {
                   ) : (
                     "---"
                   )}
-                </td>
+                </td> */}
                 <td className="flex justify-center gap-1">
                   <Link
                     to={`/donation-details/${request?._id}`}
@@ -134,7 +135,7 @@ const MyDonationRequests = () => {
                     className="btn btn-square btn-ghost btn-xs tooltip"
                     data-tip="View"
                   >
-                    👁️
+                  <View/>
                   </Link>
                   <button
                     onClick={() =>
@@ -142,13 +143,13 @@ const MyDonationRequests = () => {
                     }
                     className="btn btn-square btn-outline btn-warning btn-xs"
                   >
-                    Edit
+                   <Edit/>
                   </button>
                   <button
                     onClick={() => handleDelete(request._id)}
                     className="btn btn-square btn-outline btn-error btn-xs"
                   >
-                    Del
+                    <Delete/>
                   </button>
 
                   {request.donationStatus === "inprogress" && (

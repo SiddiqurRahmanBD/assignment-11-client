@@ -3,6 +3,7 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 import { AuthContext } from "../../Provider/AuthContext";
+import { Delete, Edit, View, X } from "lucide-react";
 
 const MyDonationRequests = () => {
   const [requests, setRequests] = useState([]);
@@ -77,7 +78,6 @@ const MyDonationRequests = () => {
               <th>Date & Time</th>
               <th>Blood</th>
               <th>Status</th>
-              <th>Donor</th>
               {(role === "Admin" || role === "admin") && (
                 <th className="text-center">Actions</th>
               )}
@@ -121,16 +121,6 @@ const MyDonationRequests = () => {
                     {request.donationStatus}
                   </span>
                 </td>
-                <td>
-                  {request.donationStatus === "inprogress" ? (
-                    <div className="text-xs">
-                      <p className="font-bold">{request.donorName}</p>
-                      <p className="opacity-60">{request.donorEmail}</p>
-                    </div>
-                  ) : (
-                    "---"
-                  )}
-                </td>
                 {(role === "Admin" || role === "admin") && (
                   <td className="flex justify-center gap-1">
                     <button
@@ -140,7 +130,7 @@ const MyDonationRequests = () => {
                       className="btn btn-square btn-ghost btn-xs tooltip"
                       data-tip="View"
                     >
-                      👁️
+                    <View/>
                     </button>
                     <button
                       onClick={() =>
@@ -148,20 +138,20 @@ const MyDonationRequests = () => {
                       }
                       className="btn btn-square btn-outline btn-warning btn-xs"
                     >
-                      Edit
+                      <Edit/>
                     </button>
                     <button
                       onClick={() => handleDelete(request._id)}
                       className="btn btn-square btn-outline btn-error btn-xs"
                     >
-                      Del
+                     <Delete/>
                     </button>
 
-                    {request.donationStatus === "inprogress" && (
+                    {request.donationStatus === "Inprogress" && (
                       <div className="join ml-2">
                         <button
                           onClick={() =>
-                            handleStatusUpdate(request._id, "done")
+                            handleStatusUpdate(request._id, "Done")
                           }
                           className="btn btn-xs btn-success text-white join-item"
                         >
@@ -169,11 +159,11 @@ const MyDonationRequests = () => {
                         </button>
                         <button
                           onClick={() =>
-                            handleStatusUpdate(request._id, "canceled")
+                            handleStatusUpdate(request._id, "Canceled")
                           }
-                          className="btn btn-xs btn-secondary join-item"
+                          className="btn btn-xs btn-error join-item"
                         >
-                          Cancel
+                         Cancel
                         </button>
                       </div>
                     )}

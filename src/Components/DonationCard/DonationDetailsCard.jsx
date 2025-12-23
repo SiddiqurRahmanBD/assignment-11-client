@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../Provider/AuthContext";
-import useAxios from "../../Hooks/useAxios";
 import {
   Calendar,
   Clock,
@@ -11,22 +10,25 @@ import {
   MessageSquare,
   Droplets,
 } from "lucide-react";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import { toast } from "react-toastify";
+import { Link } from "react-router";
 
 const DonationDetailsCard = ({ details }) => {
   const { user } = useContext(AuthContext);
-  const axiosInstance = useAxios();
+  const axiosSecure = useAxiosSecure();
   const [open, setOpen] = useState(false);
 
   const handleConfirmDonation = async () => {
     try {
-      await axiosInstance.patch(`/donations/${details._id}`, {
-        donationStatus: "inprogress",
+      await axiosSecure.patch(`/donations/${details._id}`, {
+        donationStatus: "Inprogress",
         donorName: user?.displayName,
         donorEmail: user?.email,
       });
+
       setOpen(false);
-      // Replace with a Toast if you have one
-      alert("Thank you! Donation confirmed.");
+      toast.success("Thank you! Donation confirmed.");
     } catch (error) {
       console.error("Error confirming donation", error);
     }
@@ -50,13 +52,10 @@ const DonationDetailsCard = ({ details }) => {
 
   return (
     <div className="max-w-4xl mx-auto bg-white shadow-2xl shadow-gray-200/50 rounded-3xl overflow-hidden border border-gray-100">
-      {/* Header Section */}
       <div className="bg-gradient-to-r from-red-600 to-rose-500 p-8 text-white">
         <div className="flex justify-between items-start">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight">
-              Blood Needed
-            </h2>
+            <h2 className="text-3xl font-bold tracking-tight">Blood Needed</h2>
             <p className="opacity-90 mt-1 flex items-center gap-2">
               <Droplets className="w-4 h-4" /> Priority Request
             </p>
@@ -68,7 +67,6 @@ const DonationDetailsCard = ({ details }) => {
       </div>
 
       <div className="p-8">
-        {/* Info Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <InfoRow
             icon={User}
@@ -96,7 +94,6 @@ const DonationDetailsCard = ({ details }) => {
           />
         </div>
 
-        {/* Action Area */}
         <div className="mt-8 flex items-center justify-between border-t pt-6">
           <div>
             <span className="text-sm text-gray-500">Current Status</span>
@@ -130,7 +127,7 @@ const DonationDetailsCard = ({ details }) => {
             className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"
             onClick={() => setOpen(false)}
           />
-          <div className="relative bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl">
+          <div className="relative justify-center bg-white rounded-2xl mt-20 p-8 w-full max-w-md shadow-2xl">
             <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
               Confirm Your Donation
             </h3>
@@ -151,12 +148,15 @@ const DonationDetailsCard = ({ details }) => {
             </div>
 
             <div className="flex flex-col gap-3">
-              <button
-                onClick={handleConfirmDonation}
-                className="w-full bg-red-600 text-white font-bold py-4 rounded-xl hover:bg-red-700 transition-colors"
-              >
-                Confirm
-              </button>
+              <Link to="/donation-confirm">
+                {" "}
+                <button
+                  onClick={handleConfirmDonation}
+                  className="w-full bg-red-600 text-white font-bold py-4 rounded-xl hover:bg-red-700 transition-colors"
+                >
+                  Confirm
+                </button>
+              </Link>
               <button
                 onClick={() => setOpen(false)}
                 className="w-full bg-white text-gray-500 font-semibold py-2 hover:text-gray-800 transition-colors"

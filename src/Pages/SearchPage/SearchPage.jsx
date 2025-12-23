@@ -58,14 +58,11 @@ const SearchPage = () => {
           <h2 className="text-3xl font-bold text-slate-900">Find a Donor</h2>
           <p className="text-slate-500">Search for blood donors in your area</p>
         </div>
-
-        {/* --- Search Form Section --- */}
         <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 mb-12">
           <form
             onSubmit={handleSearch}
             className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end"
           >
-            {/* Blood Group */}
             <div className="space-y-2">
               <label className="text-sm font-semibold text-slate-600 ml-1">
                 Blood Group
