@@ -40,7 +40,6 @@ const FundingPage = () => {
   return (
     <div className="min-h-screen bg-gray-50/50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto space-y-12">
-        {/* Header Section */}
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-black text-gray-900 tracking-tight">
             Funding Portal
@@ -52,7 +51,6 @@ const FundingPage = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          {/* Left: Donation Form Card */}
           <div className="lg:col-span-1 space-y-6 sticky top-8">
             <div className="bg-white rounded-[2rem] shadow-xl shadow-red-100/50 p-8 border border-red-50">
               <div className="flex items-center gap-4 mb-8">
@@ -84,8 +82,6 @@ const FundingPage = () => {
                 </button>
               </form>
             </div>
-
-            {/* Quick Stats Card */}
             <div className="bg-slate-900 rounded-[2rem] p-8 text-white">
               <div className="flex items-center gap-3 opacity-60 mb-2">
                 <BiStats />{" "}
@@ -102,7 +98,6 @@ const FundingPage = () => {
             </div>
           </div>
 
-          {/* Right: History Table */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/40 border border-slate-100 overflow-hidden">
               <div className="p-8 border-b border-slate-50 flex items-center justify-between">

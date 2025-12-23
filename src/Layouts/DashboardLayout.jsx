@@ -10,7 +10,7 @@ import {
   LayoutDashboard,
   Heart,
 } from "lucide-react";
-import { NavLink, Outlet } from "react-router";
+import { Link, NavLink, Outlet } from "react-router";
 import { AuthContext } from "../Provider/AuthContext";
 import { ToastContainer } from "react-toastify";
 import Logo from "../Components/Shared/Logo";
@@ -60,28 +60,30 @@ const DashboardLayout = () => {
           </div>
         </main>
       </div>
-      
+
       <div className="drawer-side z-20">
         <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
 
         <aside className="w-72 min-h-full bg-white border-r border-slate-100 p-6 flex flex-col shadow-2xl lg:shadow-none">
-  
           <div className="flex items-center gap-3 mb-10 px-2">
-            <Logo></Logo>
+            {/* <Logo></Logo>  */}
+            <Link to="/">
+              <Logo />{" "}
+            </Link>
           </div>
 
           <nav className="flex-1 space-y-2">
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 ml-4">
               Main Menu
             </p>
-
+            {/* 
             <NavLink
               to="/"
               className="flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-slate-600 hover:bg-slate-100 transition-all"
             >
               <Home size={20} />
               <span>Back to Home</span>
-            </NavLink>
+            </NavLink> */}
             <NavLink
               to="/dashboard"
               className="flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-slate-600 hover:bg-slate-100 transition-all"

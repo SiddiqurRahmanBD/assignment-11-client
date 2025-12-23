@@ -45,37 +45,14 @@ const Banner = () => {
             </button>
             <button
               onClick={() => navigate("/search-page")}
-              className="btn btn-lg btn-outline border-slate-200 hover:bg-slate-900 hover:border-slate-900 px-8 rounded-2xl transition-all"
+              className="btn btn-lg btn-outline border-slate-200 hover:bg-slate-900 hover:border-slate-900 hover:text-white px-8 rounded-2xl transition-all hover:-translate-y-1"
             >
-              Search a Donor
+              Search Donors
             </button>
           </div>
-
-          {/* User Trust Avatars */}
-          {/* <div className="flex items-center justify-center lg:justify-start gap-4 pt-4">
-            <div className="avatar-group -space-x-4 rtl:space-x-reverse">
-              <div className="avatar border-white w-10">
-                <img src="https://i.pravatar.cc/100?u=1" />
-              </div>
-              <div className="avatar border-white w-10">
-                <img src="https://i.pravatar.cc/100?u=2" />
-              </div>
-              <div className="avatar border-white w-10">
-                <img src="https://i.pravatar.cc/100?u=3" />
-              </div>
-              <div className="avatar placeholder border-white w-10 bg-slate-800 text-neutral-content">
-                <span className="text-xs">+99</span>
-              </div>
-            </div>
-            <p className="text-sm text-slate-500 font-medium">
-              Joined by 10,000+ Donors
-            </p>
-          </div> */}
         </div>
 
-        {/* RIGHT VISUAL CONTENT */}
         <div className="relative">
-          {/* Main Image with decorative border */}
           <div className="relative z-10 rounded-[3rem] overflow-hidden border-[12px] border-white shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
             <img
               src={blood_donation}
@@ -83,8 +60,6 @@ const Banner = () => {
               className="w-full h-[500px] object-cover"
             />
           </div>
-
-          {/* Floating Stats Card 1 */}
           <div className="absolute -top-6 -right-6 z-20 bg-white/90 backdrop-blur-md p-6 rounded-3xl shadow-xl border border-white/20 animate-bounce-slow">
             <div className="flex items-center gap-4">
               <div className="p-3 bg-red-100 rounded-2xl text-red-600">
@@ -103,46 +78,10 @@ const Banner = () => {
                   />
                 </svg>
               </div>
-              {/* <div>
-                <p className="text-2xl font-black text-slate-800">4,800+</p>
-                <p className="text-xs font-bold text-slate-500 uppercase">
-                  Requests Filled
-                </p>
-              </div> */}
             </div>
           </div>
-
-          {/* Floating Stats Card 2 */}
-          {/* <div className="absolute -bottom-6 -left-6 z-20 bg-slate-900 p-6 rounded-3xl shadow-xl animate-float">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full border-2 border-red-500 flex items-center justify-center text-red-500">
-                <span className="font-bold">O+</span>
-              </div>
-              <div className="text-white">
-                <p className="text-sm font-bold">Most Requested</p>
-                <p className="text-xs opacity-70">Blood Group This Week</p>
-              </div>
-            </div>
-          </div> */}
         </div>
       </div>
-
-      {/* Tailwind Custom CSS for Animations */}
-      {/* <style>{`
-        .clip-path-slant {
-          clip-path: polygon(20% 0%, 100% 0%, 100% 100%, 0% 100%);
-        }
-        @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-20px); }
-        }
-        @keyframes bounce-slow {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-10px); }
-        }
-        .animate-float { animation: float 6s ease-in-out infinite; }
-        .animate-bounce-slow { animation: bounce-slow 4s ease-in-out infinite; }
-      `}</style> */}
     </section>
   );
 };
